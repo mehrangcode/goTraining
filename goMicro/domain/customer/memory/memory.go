@@ -19,9 +19,15 @@ func New() *MemoryRepository {
 	}
 }
 
+func (mr *MemoryRepository) GetAll() (cs []aggregate.Customer, err error) {
+	for _, v := range mr.customers {
+		cs = append(cs, v)
+	}
+	return cs, nil
+}
 func (mr *MemoryRepository) Get(id uuid.UUID) (c aggregate.Customer, err error) {
-	if customer, ok := mr.customers[id]; ok {
-		return customer, nil
+	if c, ok := mr.customers[id]; ok {
+		return c, nil
 	}
 	return c, customer.ErrCustomerIsNotFound
 }
@@ -42,9 +48,21 @@ func (mr *MemoryRepository) Add(c aggregate.Customer) error {
 }
 
 func (mr *MemoryRepository) Update(c aggregate.Customer) error {
+	if _, ok := mr.customers[c.GetID()]; !ok {
+		return customer.ErrCustomerIsNotFound
+	}
+	mr.Lock()
+	mr.customers[c.GetID()] = c
+	mr.Unlock()
 	return nil
 }
 
 func (mr *MemoryRepository) Delete(id uuid.UUID) (err error) {
-	return err
+	if _, ok := mr.customers[id]; !ok {
+		return customer.ErrCustomerIsNotFound
+	}
+	mr.Lock()
+	delete(mr.customers, id)
+	mr.Unlock()
+	return nil
 }
