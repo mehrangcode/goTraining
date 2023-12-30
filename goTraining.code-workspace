@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "goMicro"
+		},
+		{
+			"path": "office"
 		}
 	]
 }
