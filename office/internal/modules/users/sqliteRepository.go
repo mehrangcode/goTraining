@@ -3,6 +3,7 @@ package users
 import (
 	"database/sql"
 
+	"golang.org/x/crypto/bcrypt"
 	"mehrangcode.ir/office/pkg/database"
 )
 
@@ -37,9 +38,26 @@ func (repo *UserSqliteRepository) GetAll() ([]ViewModel, error) {
 	return userList, nil
 }
 
-// func ConvertToRepoModel(u ViewModel) UserViewModel {
-// 	return UserViewModel{
-// 		ID:   u.person.ID,
-// 		Name: u.person.Name,
-// 	}
-// }
+func (repo *UserSqliteRepository) Create(payload DTO) (string, error) {
+	query := `INSERT INTO users (name,email,password) VALUES ($1, $2, $3) RETURNING id`
+	stmt, err := repo.DB.Prepare(query)
+	if err != nil {
+		return "", err
+	}
+	hasingPassword, err := hashingPassword(payload.Password)
+	if err != nil {
+		return "", err
+	}
+	row := stmt.QueryRow(payload.Name, payload.Email, hasingPassword)
+	userId := ""
+	err = row.Scan(&userId)
+	if err != nil {
+		return "", err
+	}
+	return userId, nil
+}
+
+func hashingPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(hash), err
+}

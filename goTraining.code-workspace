@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "office"
+		},
+		{
+			"path": "../../../myProject/resturant/server"
 		}
 	]
 }
