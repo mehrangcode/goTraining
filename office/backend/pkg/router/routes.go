@@ -12,6 +12,7 @@ import (
 func RegisterRoutes() http.Handler {
 
 	r := chi.NewRouter()
+	fs := http.FileServer(http.Dir("client"))
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -20,8 +21,9 @@ func RegisterRoutes() http.Handler {
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
+
 	r.Use(middleware.Logger)
-	r.Get("/", users.GetAll)
+	r.Handle("/client", http.StripPrefix("/client", fs))
 	r.Get("/users", users.GetAll)
 	return r
 }

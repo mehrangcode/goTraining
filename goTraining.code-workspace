@@ -4,10 +4,13 @@
 			"path": "goMicro"
 		},
 		{
-			"path": "office"
+			"path": "../../../myProject/resturant/server"
 		},
 		{
-			"path": "../../../myProject/resturant/server"
+			"path": "office/backend"
+		},
+		{
+			"path": "office/client"
 		}
 	]
 }
