@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFFICE | User</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="dark:bg-slate-800 dark:text-white">
+    <h1>User</h1>
+    <form hx-post="/users" hx-target=".list" hx-swap="beforeend">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email">
+        <label for="password">Password</label>
+        <input type="text" name="password" id="password">
+        <button type="submit">Save</button>
+    </form>
+    <div class="list">
+        {{ range . }}
+        <p> {{.ID}}) {{ .Name }} - {{ .Email }} </p>
+        {{ end }}
+    </div>
+    <!-- <button hx-get="/users" hx-target=".list">FETCH</button> -->
+</body>
+
+</html>
