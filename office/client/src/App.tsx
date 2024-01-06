@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 function App() {
 
   return (
-    <div className="rootElement">
+    <div className="app">
       <BrowserRouter>
       <Dashboard />
       </BrowserRouter>

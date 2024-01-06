@@ -24,9 +24,11 @@ function Users() {
             return <tr>
               <td>{record.name}</td>
               <td>{record.email}</td>
-              <td className="acction">
-                <button onClick={() => userStore.selectUser(record)}>Edit</button>
-                <button onClick={() => userStore.delete(record.id)}>Delete</button>
+              <td>
+                <div className="action">
+                  <button onClick={() => userStore.selectUser(record)}>Edit</button>
+                  <button onClick={() => userStore.delete(record.id)}>Delete</button>
+                </div>
               </td>
             </tr>
           })}

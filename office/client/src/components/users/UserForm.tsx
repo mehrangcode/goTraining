@@ -19,19 +19,29 @@ function UserForm() {
     }, [userStore.targetItem])
     async function onSubmitHandler(e) {
         e.preventDefault()
-        const payload = {
-            name: values.name,
-            email: values.email,
-            password: values.password
-        }
-        if (userStore.targetItem?.id) {
-            userStore.update(userStore.targetItem.id, {
+        try {
+
+            const payload = {
                 name: values.name,
                 email: values.email,
-                password: undefined
+                password: values.password
+            }
+            if (userStore.targetItem?.id) {
+                userStore.update(userStore.targetItem.id, {
+                    name: values.name,
+                    email: values.email,
+                    password: undefined
+                })
+            } else {
+                userStore.create(payload)
+            }
+            setValues({
+                name: "",
+                email: "",
+                password: ""
             })
-        } else {
-            userStore.create(payload)
+        } catch (error) {
+
         }
     }
 

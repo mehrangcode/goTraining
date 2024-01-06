@@ -4,13 +4,16 @@ import Users from "./users/Users"
 
 function Dashboard() {
     return (
-        <div>
-            <div className="nav">Nav</div>
-            <Routes>
-                <Route path="/users" element={<Users />} />
-                <Route path="/" element={<Home />} />
-
-            </Routes>
+        <div className="dashboard">
+            <header>
+                <nav className="nav">OFFICE</nav>
+            </header>
+            <div className="rootElement">
+                <Routes>
+                    <Route path="/users" element={<Users />} />
+                    <Route path="/" element={<Home />} />
+                </Routes>
+            </div>
         </div>
     )
 }
