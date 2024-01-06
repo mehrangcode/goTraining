@@ -1,0 +1,34 @@
+:root {
+  --background: #444;
+  --fontColor: #eee;
+  --primary: lightcoral;
+  --primaryFontColor: #444;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--fontColor);
+}
+
+button {
+  border: none;
+  padding: 0.5rem;
+  background: var(--primary);
+  color: var(--primaryFontColor);
+  cursor: pointer;
+}
+
+.rootElement {
+  padding: 1rem;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
