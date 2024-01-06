@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"errors"
 
 	"golang.org/x/crypto/bcrypt"
 	"mehrangcode.ir/office/internal/types"
@@ -59,14 +60,15 @@ func (repo *UserSqliteRepository) Create(payload types.UserDTO) (string, error) 
 }
 
 func (repo *UserSqliteRepository) Update(userPayload types.UserDTO) error {
-	query := "UPDATE users SET name=?, email=? WHERE id=?"
+	query := "UPDATE users SET name=?, email=? WHERE id=? RETURNING id"
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(userPayload.Name, userPayload.Email, userPayload.ID)
+	var id string
+	err = stmt.QueryRow(userPayload.Name, userPayload.Email, userPayload.ID).Scan(&id)
 	if err != nil {
-		return err
+		return errors.New("user was not found")
 	}
 	return nil
 }

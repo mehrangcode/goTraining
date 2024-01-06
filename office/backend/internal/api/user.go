@@ -1,6 +1,7 @@
 package user_api
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -43,6 +44,10 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
+	if u.Name == "" || u.Email == "" || u.Password == "" {
+		utils.ResponseToError(w, errors.New("user fields is required"), http.StatusBadRequest)
+		return
+	}
 	repo := storage.NewUserSqliteRepo()
 	userId, err := repo.Create(u)
 	if err != nil {
@@ -67,9 +72,14 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 	}
 	u.ID = userId
+	if u.ID == "" || u.Name == "" || u.Email == "" {
+		utils.ResponseToError(w, errors.New("user fields is required"), http.StatusBadRequest)
+		return
+	}
 	err = repo.Update(u)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
+		return
 	}
 	utils.WriteJson(w, http.StatusOK, map[string]types.UserViewModel{
 		"user": types.UserViewModel(u),

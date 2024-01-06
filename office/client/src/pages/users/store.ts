@@ -34,7 +34,7 @@ const UserStore = create<UserStoreType>()(
                 get().fetchList()
             } catch (error) {
                 set({ loading: false })
-                throw new Error(error as any)
+                throw new Error(error)
             }
         },
         update: async (userId: string, payload: UserType) => {
@@ -47,7 +47,7 @@ const UserStore = create<UserStoreType>()(
                 set({ loading: false, targetItem: undefined, list: updatedList })
             } catch (error) {
                 set({ loading: false })
-                throw new Error(error as any)
+                throw new Error(error)
             }
         },
         selectUser: (user) => {
@@ -61,7 +61,7 @@ const UserStore = create<UserStoreType>()(
                 set({ loading: false, targetItem: undefined, list: updatedList })
             } catch (error) {
                 set({ loading: false })
-                throw new Error(error as any)
+                throw new Error(error)
             }
 
         }

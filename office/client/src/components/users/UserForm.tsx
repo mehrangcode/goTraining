@@ -20,20 +20,19 @@ function UserForm() {
     async function onSubmitHandler(e) {
         e.preventDefault()
         try {
-
             const payload = {
                 name: values.name,
                 email: values.email,
                 password: values.password
             }
             if (userStore.targetItem?.id) {
-                userStore.update(userStore.targetItem.id, {
+                await userStore.update(userStore.targetItem.id, {
                     name: values.name,
                     email: values.email,
                     password: undefined
                 })
             } else {
-                userStore.create(payload)
+                await userStore.create(payload)
             }
             setValues({
                 name: "",
@@ -41,7 +40,6 @@ function UserForm() {
                 password: ""
             })
         } catch (error) {
-
         }
     }
 
