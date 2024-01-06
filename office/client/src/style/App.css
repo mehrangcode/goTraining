@@ -3,6 +3,10 @@
   --fontColor: #eee;
   --primary: lightcoral;
   --primaryFontColor: #444;
+  --borderColor: #666;
+  --thBackground: #666;
+  --thfontColor: #eee;
+  --evenTrBg: #535353;
 }
 
 * {
