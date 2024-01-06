@@ -58,6 +58,35 @@ func (repo *UserSqliteRepository) Create(payload types.UserDTO) (string, error) 
 	return userId, nil
 }
 
+func (repo *UserSqliteRepository) Update(userPayload types.UserDTO) error {
+	query := "UPDATE users SET name=?, email=? WHERE id=?"
+	stmt, err := repo.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(userPayload.Name, userPayload.Email, userPayload.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *UserSqliteRepository) Delete(userId string) error {
+	query := `DELETE FROM users WHERE id=?`
+
+	stmt, err := repo.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func hashingPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(hash), err

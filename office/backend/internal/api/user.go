@@ -3,6 +3,7 @@ package user_api
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"mehrangcode.ir/office/internal/storage"
 	"mehrangcode.ir/office/internal/types"
 	"mehrangcode.ir/office/utils"
@@ -37,7 +38,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	// }
 	var u types.UserDTO
 	var err error
-	err = utils.ReadJson(w, r, u)
+	err = utils.ReadJson(w, r, &u)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
@@ -53,5 +54,36 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	// tmpl.Execute(w, nil)
 	utils.WriteJson(w, http.StatusCreated, map[string]string{
 		"userId": userId,
+	})
+}
+
+func Update(w http.ResponseWriter, r *http.Request) {
+	repo := storage.NewUserSqliteRepo()
+	userId := chi.URLParam(r, "userId")
+	var u types.UserDTO
+	var err error
+	err = utils.ReadJson(w, r, &u)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+	}
+	u.ID = userId
+	err = repo.Update(u)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+	}
+	utils.WriteJson(w, http.StatusOK, map[string]types.UserViewModel{
+		"user": types.UserViewModel(u),
+	})
+}
+func Delete(w http.ResponseWriter, r *http.Request) {
+	userId := chi.URLParam(r, "userId")
+	repo := storage.NewUserSqliteRepo()
+	err := repo.Delete(userId)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusInternalServerError)
+		return
+	}
+	utils.WriteJson(w, http.StatusOK, map[string]string{
+		"message": "user Deleted",
 	})
 }

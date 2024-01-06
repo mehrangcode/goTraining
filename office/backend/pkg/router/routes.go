@@ -25,6 +25,8 @@ func RegisterRoutes() http.Handler {
 	FileServer(r)
 	r.Get("/users", user_api.GetAll)
 	r.Post("/users", user_api.Create)
+	r.Put("/users/{userId}", user_api.Update)
+	r.Delete("/users/{userId}", user_api.Delete)
 	return r
 }
 

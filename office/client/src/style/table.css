@@ -36,3 +36,8 @@ td {
 tr:nth-child(even) {
     background: var(--evenTrBg);
 }
+
+td.acction {
+    display: flex;
+    gap: 0.5rem;
+}

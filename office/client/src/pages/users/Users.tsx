@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import UserStore from "./store"
+import UserForm from "@src/components/users/UserForm"
 
 function Users() {
   const userStore = UserStore()
@@ -8,6 +9,7 @@ function Users() {
   }, [])
   return (
     <div className="userPage">
+      <UserForm />
       <table className="list">
         <thead>
           <tr>
@@ -22,7 +24,10 @@ function Users() {
             return <tr>
               <td>{record.name}</td>
               <td>{record.email}</td>
-              <td><button>Delete</button></td>
+              <td className="acction">
+                <button onClick={() => userStore.selectUser(record)}>Edit</button>
+                <button onClick={() => userStore.delete(record.id)}>Delete</button>
+              </td>
             </tr>
           })}
         </tbody>

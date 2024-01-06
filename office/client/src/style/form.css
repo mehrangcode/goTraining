@@ -1,0 +1,20 @@
+.fomControll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.fomControll input[type=text] {
+    width: 100%;
+    height: 2rem;
+    border-radius: 0.25rem;
+    border: none;
+    padding: 0.25rem;
+}
+.fomControll input[type=password] {
+    width: 100%;
+    height: 2rem;
+    border-radius: 0.25rem;
+    border: none;
+    padding: 0.25rem;
+}
