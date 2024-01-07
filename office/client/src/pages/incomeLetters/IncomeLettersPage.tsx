@@ -10,7 +10,7 @@ function IncomeLettersPage() {
   const nav = useNavigate()
   return (
     <div className="userPage">
-      <button onClick={() => nav("/income/modify")}>Create</button>
+      <button onClick={() => nav("modify")}>Create</button>
       <table className="list">
         <thead>
           <tr>

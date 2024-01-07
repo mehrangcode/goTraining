@@ -13,9 +13,9 @@ function Dashboard() {
             <div className="rootElement">
                 <Routes>
                     <Route path="/users" element={<Users />} />
-                    <Route path="/income" element={<IncomeLettersPage />} />
-                    <Route path="/income/modify" element={<IncomeLetterForm />} />
-                    <Route path="/income/modify/:id" element={<IncomeLetterForm />} />
+                    <Route path="/letters/income" element={<IncomeLettersPage />} />
+                    <Route path="/letters/income/modify" element={<IncomeLetterForm />} />
+                    <Route path="/letters/income/modify/:id" element={<IncomeLetterForm />} />
                     <Route path="/" element={<Home />} />
                 </Routes>
             </div>
