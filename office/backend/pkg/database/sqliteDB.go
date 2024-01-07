@@ -36,6 +36,24 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
+	query = `
+		CREATE TABLE IF NOT EXISTS income_letters(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			number INTEGER NOT NULL,
+			title TEXT,
+			subjectId TEXT DEFAULT 1,
+			owner TEXT,
+			destination TEXT,
+			status INTEGER DEFAULT 1,
+			content TEXT,
+			operatorId TEXT,
+			created_at DATE DEFAULT CURRENT_DATE
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 	// query = `
 	// 	CREATE TABLE IF NOT EXISTS letters(
 	// 		id INTEGER PRIMARY KEY AUTOINCREMENT,

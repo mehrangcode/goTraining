@@ -1,4 +1,5 @@
-@import "./App.css";
-@import "./table.css";
+@import "App.css";
+@import "table.css";
 @import "userPage.css";
-@import "form.css"
+@import "form.css";
+@import "grid.css";

@@ -3,11 +3,17 @@ import * as apis from "./api"
 
 interface UserType {
     id?: string
-    name: string
-    email: string
-    password: string
+    number: number
+    title: string
+    content: string
+    subjectId: string
+    created_At: string
+    owner: string
+    destination: string
+    status: string
+    operatorId: string
 }
-interface UserStoreType {
+interface IncomeLetterStoreType {
     loading: boolean
     list: UserType[]
     targetItem: UserType
@@ -18,14 +24,14 @@ interface UserStoreType {
     delete: (userId: string) => void
 }
 
-const UserStore = create<UserStoreType>()(
+const IncomeLetterStore = create<IncomeLetterStoreType>()(
     (set, get) => ({
         loading: false,
         list: [],
         targetItem: undefined,
         fetchList: async () => {
             const res = await apis.getAll()
-            set({ list: res.data })
+            set({ list: res?.data || [] })
         },
         create: async (payload: UserType) => {
             set({ loading: true })
@@ -68,4 +74,4 @@ const UserStore = create<UserStoreType>()(
     }),
 )
 
-export default UserStore
+export default IncomeLetterStore
