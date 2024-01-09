@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"mehrangcode.ir/office/internal/modules/subjects"
 	"mehrangcode.ir/office/internal/modules/users"
 )
 
@@ -25,10 +26,24 @@ func RegisterRoutes() http.Handler {
 	FileServer(r)
 
 	user_handler := users.NewHandler(users.NewSqliteRepo())
-	r.Get("/users", user_handler.GetAll)
-	r.Post("/users", user_handler.Create)
-	r.Put("/users/{userId}", user_handler.Update)
-	r.Delete("/users/{userId}", user_handler.Delete)
+	r.Route("/users", func(r chi.Router) {
+		r.Get("/", user_handler.GetAll)
+		r.Post("/", user_handler.Create)
+		r.Route("/{userId}", func(r chi.Router) {
+			r.Put("/", user_handler.Update)
+			r.Delete("/", user_handler.Delete)
+		})
+	})
+
+	subject_handler := subjects.NewHandlers(subjects.InitialSqliteStorage())
+	r.Route("/subjects", func(r chi.Router) {
+		r.Get("/", subject_handler.GetAll)
+		r.Post("/", subject_handler.Create)
+		r.Route("/{subjectId}", func(r chi.Router) {
+			r.Put("/", subject_handler.Update)
+			r.Delete("/", subject_handler.Delete)
+		})
+	})
 
 	// LETERS INCOME
 	income_letters_module := users.NewHandler(users.NewSqliteRepo())

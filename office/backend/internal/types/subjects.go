@@ -3,11 +3,11 @@ package types
 type SubjectViewModel struct {
 	ID      string `json:"id"`
 	Label   string `json:"label"`
-	Archive uint16 `json:"archive"`
+	Archive bool   `json:"archive"`
 }
 
 type SubjectDTO struct {
 	ID      string `json:"id"`
 	Label   string `json:"label"`
-	Archive uint16 `json:"archive"`
+	Archive bool   `json:"archive"`
 }
