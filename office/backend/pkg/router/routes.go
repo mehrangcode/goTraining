@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"mehrangcode.ir/office/internal/modules/income_letters"
 	"mehrangcode.ir/office/internal/modules/subjects"
 	"mehrangcode.ir/office/internal/modules/users"
 )
@@ -46,11 +47,15 @@ func RegisterRoutes() http.Handler {
 	})
 
 	// LETERS INCOME
-	income_letters_module := users.NewHandler(users.NewSqliteRepo())
-	r.Get("/letters/income", income_letters_module.GetAll)
-	r.Post("/letters/income", income_letters_module.Create)
-	// r.Put("/letters/income/{letterId}", user_api.Update)
-	// r.Delete("/letters/income/{letterId}", user_api.Delete)
+	income_letters_handlers := income_letters.NewHandlers(income_letters.InitialSqliteStorage())
+	r.Route("/letters/income", func(r chi.Router) {
+		r.Get("/", income_letters_handlers.GetAll)
+		r.Post("/", income_letters_handlers.Create)
+		r.Route("/{letterId}", func(r chi.Router) {
+			r.Put("/", income_letters_handlers.Update)
+			r.Delete("/", income_letters_handlers.Delete)
+		})
+	})
 	return r
 }
 
