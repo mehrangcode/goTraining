@@ -1,22 +1,25 @@
-package user_api
+package users
 
 import (
 	"errors"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"mehrangcode.ir/office/internal/storage"
 	"mehrangcode.ir/office/internal/types"
 	"mehrangcode.ir/office/utils"
 )
 
-type Page struct {
-	Users []types.UserViewModel
+type UserHandler struct {
+	repo UserRepository
 }
 
-func GetAll(w http.ResponseWriter, r *http.Request) {
-	repo := storage.NewUserSqliteRepo()
-	Users, err := repo.GetAll()
+func NewHandler(repo UserRepository) *UserHandler {
+	return &UserHandler{
+		repo: repo,
+	}
+}
+func (h *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+	Users, err := h.repo.GetAll()
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
@@ -31,25 +34,24 @@ func GetAll(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJson(w, 200, Users)
 }
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	// var user types.UserDTO = types.UserDTO{
 	// 	Name:     r.PostFormValue("name"),
 	// 	Email:    r.PostFormValue("email"),
 	// 	Password: r.PostFormValue("password"),
 	// }
-	var u types.UserDTO
+	var newUser types.UserDTO
 	var err error
-	err = utils.ReadJson(w, r, &u)
+	err = utils.ReadJson(w, r, &newUser)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
-	if u.Name == "" || u.Email == "" || u.Password == "" {
+	if newUser.Name == "" || newUser.Email == "" || newUser.Password == "" {
 		utils.ResponseToError(w, errors.New("user fields is required"), http.StatusBadRequest)
 		return
 	}
-	repo := storage.NewUserSqliteRepo()
-	userId, err := repo.Create(u)
+	userId, err := h.repo.Create(newUser)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
@@ -62,33 +64,32 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func Update(w http.ResponseWriter, r *http.Request) {
-	repo := storage.NewUserSqliteRepo()
+func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, "userId")
-	var u types.UserDTO
+	var userDTO types.UserDTO
 	var err error
-	err = utils.ReadJson(w, r, &u)
+	err = utils.ReadJson(w, r, &userDTO)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 	}
-	u.ID = userId
-	if u.ID == "" || u.Name == "" || u.Email == "" {
+	if userId == "" || userDTO.Name == "" || userDTO.Email == "" {
 		utils.ResponseToError(w, errors.New("user fields is required"), http.StatusBadRequest)
 		return
 	}
-	err = repo.Update(u)
+	err = h.repo.Update(userId, userDTO)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
 	}
-	utils.WriteJson(w, http.StatusOK, map[string]types.UserViewModel{
-		"user": types.UserViewModel(u),
+	utils.WriteJson(w, http.StatusOK, types.UserViewModel{
+		ID:    userId,
+		Name:  userDTO.Name,
+		Email: userDTO.Email,
 	})
 }
-func Delete(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, "userId")
-	repo := storage.NewUserSqliteRepo()
-	err := repo.Delete(userId)
+	err := h.repo.Delete(userId)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return

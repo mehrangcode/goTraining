@@ -7,7 +7,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	incomeletters "mehrangcode.ir/office/internal/modules/incomeLetters"
 	"mehrangcode.ir/office/internal/modules/users"
 )
 
@@ -24,14 +23,17 @@ func RegisterRoutes() http.Handler {
 	}))
 	r.Use(middleware.Logger)
 	FileServer(r)
-	r.Get("/users", users.GetAll)
-	r.Post("/users", users.Create)
-	r.Put("/users/{userId}", users.Update)
-	r.Delete("/users/{userId}", users.Delete)
+
+	user_handler := users.NewHandler(users.NewSqliteRepo())
+	r.Get("/users", user_handler.GetAll)
+	r.Post("/users", user_handler.Create)
+	r.Put("/users/{userId}", user_handler.Update)
+	r.Delete("/users/{userId}", user_handler.Delete)
 
 	// LETERS INCOME
-	r.Get("/letters/income", incomeletters.GetAll)
-	r.Post("/letters/income", incomeletters.Create)
+	income_letters_module := users.NewHandler(users.NewSqliteRepo())
+	r.Get("/letters/income", income_letters_module.GetAll)
+	r.Post("/letters/income", income_letters_module.Create)
 	// r.Put("/letters/income/{letterId}", user_api.Update)
 	// r.Delete("/letters/income/{letterId}", user_api.Delete)
 	return r

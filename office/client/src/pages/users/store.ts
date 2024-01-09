@@ -43,7 +43,7 @@ const UserStore = create<UserStoreType>()(
                 const res = await apis.updateUser(userId, payload)
                 const updatedList: UserType[] = JSON.parse(JSON.stringify(get().list))
                 const i = updatedList.findIndex(x => x.id === userId)
-                updatedList[i] = res.data?.user
+                updatedList[i] = res.data
                 set({ loading: false, targetItem: undefined, list: updatedList })
             } catch (error) {
                 set({ loading: false })

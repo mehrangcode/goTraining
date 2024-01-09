@@ -54,17 +54,17 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
-	// query = `
-	// 	CREATE TABLE IF NOT EXISTS letters(
-	// 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 		title TEXT NOT NULL,
-	// 		content TEXT NOT NULL,
-	// 		ownerId TEXT NOT NULL,
-	// 	);
-	// 	`
-	// _, err = DBx.Exec(query)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	query = `
+	CREATE TABLE subjects (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		label TEXT NOT NULL,
+		archive BOOLEAN DEFAULT FALSE
+		);
+		`
+	_, err = DBx.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
 	return err
 }

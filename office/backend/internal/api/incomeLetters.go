@@ -1,4 +1,4 @@
-package incomeletters
+package api
 
 import (
 	"errors"
@@ -9,9 +9,17 @@ import (
 	"mehrangcode.ir/office/utils"
 )
 
-func GetAll(w http.ResponseWriter, r *http.Request) {
-	repo := storage.NewIncomSqliteRepository()
-	letters, err := repo.GetAll()
+type IncomeLettersModule struct {
+	repo *storage.IncomeLettersSqliteRepository
+}
+
+func NewIncomeLettersModule(repo storage.IncomeLettersSqliteRepository) *IncomeLettersModule {
+	return &IncomeLettersModule{
+		repo: storage.NewIncomSqliteRepository(),
+	}
+}
+func (module *IncomeLettersModule) GetAll(w http.ResponseWriter, r *http.Request) {
+	letters, err := module.repo.GetAll()
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
@@ -24,7 +32,7 @@ func GetAll(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJson(w, statusCode, letters)
 }
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func (module *IncomeLettersModule) Create(w http.ResponseWriter, r *http.Request) {
 	var u types.IncomeLetterDTO
 	var err error
 	err = utils.ReadJson(w, r, &u)
@@ -36,8 +44,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, errors.New("number fields is required"), http.StatusBadRequest)
 		return
 	}
-	repo := storage.NewIncomSqliteRepository()
-	letterId, err := repo.Create(u)
+	letterId, err := module.repo.Create(u)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return

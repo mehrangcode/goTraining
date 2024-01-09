@@ -1,4 +1,4 @@
-package storage
+package users
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ type UserSqliteRepository struct {
 	DB *sqlx.DB
 }
 
-func NewUserSqliteRepo() *UserSqliteRepository {
+func NewSqliteRepo() *UserSqliteRepository {
 	return &UserSqliteRepository{
 		DB: database.Connection(),
 	}
@@ -59,14 +59,14 @@ func (repo *UserSqliteRepository) Create(payload types.UserDTO) (string, error) 
 	return userId, nil
 }
 
-func (repo *UserSqliteRepository) Update(userPayload types.UserDTO) error {
+func (repo *UserSqliteRepository) Update(userId string, userPayload types.UserDTO) error {
 	query := "UPDATE users SET name=?, email=? WHERE id=? RETURNING id"
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {
 		return err
 	}
 	var id string
-	err = stmt.QueryRow(userPayload.Name, userPayload.Email, userPayload.ID).Scan(&id)
+	err = stmt.QueryRow(userPayload.Name, userPayload.Email, userId).Scan(&id)
 	if err != nil {
 		return errors.New("user was not found")
 	}
