@@ -20,7 +20,7 @@ function Users() {
         </thead>
         <tbody>
 
-          {userStore.list.map(record => {
+          {userStore.list?.map(record => {
             return <tr>
               <td>{record.name}</td>
               <td>{record.email}</td>

@@ -1,16 +1,16 @@
 package storage
 
 import (
-	"database/sql"
 	"errors"
 
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 	"mehrangcode.ir/office/internal/types"
 	"mehrangcode.ir/office/pkg/database"
 )
 
 type UserSqliteRepository struct {
-	DB *sql.DB
+	DB *sqlx.DB
 }
 
 func NewUserSqliteRepo() *UserSqliteRepository {
@@ -21,22 +21,22 @@ func NewUserSqliteRepo() *UserSqliteRepository {
 
 func (repo *UserSqliteRepository) GetAll() ([]types.UserViewModel, error) {
 	query := `SELECT * FROM users`
-	rows, err := repo.DB.Query(query)
+	var userList []types.UserViewModel
+	err := repo.DB.Select(&userList, query)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	var userList []types.UserViewModel
-	// return users, nil
-	for rows.Next() {
-		var u types.UserViewModel
-		err = rows.Scan(&u.ID, &u.Name, &u.Email, &u.Password)
-		if err != nil {
-			return nil, err
-		}
-		// converted := NewUser(u.ID, u.Name)
-		userList = append(userList, u)
-	}
+	// defer rows.Close()
+	// // return users, nil
+	// for rows.Next() {
+	// 	var u types.UserViewModel
+	// 	err = rows.Scan(&u.ID, &u.Name, &u.Email, &u.Password)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	// converted := NewUser(u.ID, u.Name)
+	// 	userList = append(userList, u)
+	// }
 	return userList, nil
 }
 

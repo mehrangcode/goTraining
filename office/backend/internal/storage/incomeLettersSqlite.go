@@ -1,14 +1,13 @@
 package storage
 
 import (
-	"database/sql"
-
+	"github.com/jmoiron/sqlx"
 	"mehrangcode.ir/office/internal/types"
 	"mehrangcode.ir/office/pkg/database"
 )
 
 type IncomeLettersSqliteRepository struct {
-	DB *sql.DB
+	DB *sqlx.DB
 }
 
 func NewIncomSqliteRepository() *IncomeLettersSqliteRepository {
@@ -18,47 +17,11 @@ func NewIncomSqliteRepository() *IncomeLettersSqliteRepository {
 }
 
 func (repo *IncomeLettersSqliteRepository) GetAll() ([]types.IncomeLetterViewModel, error) {
-	query := `SELECT 
-	iD,
-	number,
-	title,
-	content,
-	subjectId,
-	created_At,
-	owner,
-	destination,
-	operatorId,
-	status 
-	FROM income_letters`
-	stmt, err := repo.DB.Prepare(query)
-	if err != nil {
-		return nil, err
-	}
-	rows, err := stmt.Query()
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+	query := `SELECT * FROM income_letters`
 	var letters []types.IncomeLetterViewModel
-	for rows.Next() {
-		var l types.IncomeLetterViewModel
-		rows.Scan(
-			&l.ID,
-			&l.Number,
-			&l.Title,
-			&l.Content,
-			&l.SubjectId,
-			&l.Created_At,
-			&l.Owner,
-			&l.Destination,
-			&l.OperatorId,
-			&l.Status,
-		)
-		// err = rows.Scan(&l)
-		if err != nil {
-			return nil, err
-		}
-		letters = append(letters, l)
+	err := repo.DB.Select(&letters, query)
+	if err != nil {
+		return nil, err
 	}
 	return letters, nil
 }

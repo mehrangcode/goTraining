@@ -1,7 +1,14 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
 
-func Connection() *sql.DB {
+	"github.com/jmoiron/sqlx"
+)
+
+func ConnectionDB() *sql.DB {
 	return DB
+}
+func Connection() *sqlx.DB {
+	return DBx
 }

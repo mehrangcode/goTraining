@@ -1,25 +1,25 @@
 package database
 
 import (
-	"database/sql"
 	"log"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func sqliteDbConnect() {
-	db, err := sql.Open("sqlite3", "data.db")
+	db, err := sqlx.Open("sqlite3", ":memory:")
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	DB = db
+	DBx = db
 	err = MigrateDB()
 	if err != nil {
 		panic(err)
 	}
-	DB.SetMaxOpenConns(10)
-	DB.SetMaxIdleConns(5)
+	DBx.SetMaxOpenConns(10)
+	DBx.SetMaxIdleConns(5)
 	log.Println("sqlite DB is Connected")
 }
 
@@ -32,7 +32,7 @@ func MigrateDB() error {
 			password TEXT NOT NULL
 		);
 		`
-	_, err := DB.Exec(query)
+	_, err := DBx.Exec(query)
 	if err != nil {
 		panic(err)
 	}
@@ -41,16 +41,16 @@ func MigrateDB() error {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			number INTEGER NOT NULL,
 			title TEXT,
+			content TEXT,
 			subjectId TEXT DEFAULT 1,
+			created_at DATE DEFAULT CURRENT_DATE,
 			owner TEXT,
 			destination TEXT,
-			status INTEGER DEFAULT 1,
-			content TEXT,
 			operatorId TEXT,
-			created_at DATE DEFAULT CURRENT_DATE
+			status INTEGER DEFAULT 1
 		);
 		`
-	_, err = DB.Exec(query)
+	_, err = DBx.Exec(query)
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +62,7 @@ func MigrateDB() error {
 	// 		ownerId TEXT NOT NULL,
 	// 	);
 	// 	`
-	// _, err = DB.Exec(query)
+	// _, err = DBx.Exec(query)
 	// if err != nil {
 	// 	panic(err)
 	// }
