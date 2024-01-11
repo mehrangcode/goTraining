@@ -37,6 +37,24 @@ func MigrateDB() error {
 		panic(err)
 	}
 	query = `
+		CREATE TABLE IF NOT EXISTS issued_letters(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			number INTEGER NOT NULL,
+			title TEXT,
+			content TEXT,
+			subjectId TEXT DEFAULT 1,
+			created_at DATE DEFAULT CURRENT_DATE,
+			owner TEXT,
+			destination TEXT,
+			operatorId TEXT,
+			status INTEGER DEFAULT 1
+		);
+		`
+	_, err = DBx.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	query = `
 		CREATE TABLE IF NOT EXISTS income_letters(
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			number INTEGER NOT NULL,

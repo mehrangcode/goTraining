@@ -5,6 +5,8 @@ import IncomeLettersPage from "./incomeLetters/IncomeLettersPage"
 import IncomeLetterForm from "@src/components/IncomeLetters/IncomeLetterForm"
 import SubjectsPage from "./subjects/SubjectsPage"
 import { Link } from "react-router-dom"
+import IssuedLettersPage from "./issuedLetters/IssuedLettersPage"
+import IssuedLetterForm from "@src/components/IssuedLetters/IssuedLetterForm"
 
 function Dashboard() {
     return (
@@ -18,6 +20,9 @@ function Dashboard() {
                     <Route path="/letters/income" element={<IncomeLettersPage />} />
                     <Route path="/letters/income/modify" element={<IncomeLetterForm />} />
                     <Route path="/letters/income/modify/:id" element={<IncomeLetterForm />} />
+                    <Route path="/letters/issued" element={<IssuedLettersPage />} />
+                    <Route path="/letters/issued/modify" element={<IssuedLetterForm />} />
+                    <Route path="/letters/issued/modify/:id" element={<IssuedLetterForm />} />
                     <Route path="/subjects" element={<SubjectsPage />} />
                     <Route path="/" element={<Home />} />
                 </Routes>

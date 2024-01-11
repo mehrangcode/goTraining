@@ -2,12 +2,12 @@ package router
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"mehrangcode.ir/office/internal/modules/income_letters"
+	"mehrangcode.ir/office/internal/modules/issued_letters"
 	"mehrangcode.ir/office/internal/modules/subjects"
 	"mehrangcode.ir/office/internal/modules/users"
 )
@@ -24,7 +24,7 @@ func RegisterRoutes() http.Handler {
 		MaxAge:           300,
 	}))
 	r.Use(middleware.Logger)
-	FileServer(r)
+	// FileServer(r)
 
 	user_handler := users.NewHandler(users.NewSqliteRepo())
 	r.Route("/users", func(r chi.Router) {
@@ -47,6 +47,17 @@ func RegisterRoutes() http.Handler {
 	})
 
 	// LETERS INCOME
+	issued_letters_handlers := issued_letters.NewHandlers(issued_letters.InitialSqliteStorage())
+	r.Route("/letters/issued", func(r chi.Router) {
+		r.Get("/", issued_letters_handlers.GetAll)
+		r.Post("/", issued_letters_handlers.Create)
+		r.Route("/{letterId}", func(r chi.Router) {
+			r.Put("/", issued_letters_handlers.Update)
+			r.Delete("/", issued_letters_handlers.Delete)
+		})
+	})
+
+	// LETERS INCOME
 	income_letters_handlers := income_letters.NewHandlers(income_letters.InitialSqliteStorage())
 	r.Route("/letters/income", func(r chi.Router) {
 		r.Get("/", income_letters_handlers.GetAll)
@@ -59,18 +70,18 @@ func RegisterRoutes() http.Handler {
 	return r
 }
 
-func FileServer(router *chi.Mux) {
-	root := "./public"
-	fs := http.FileServer(http.Dir(root))
+// func FileServer(router *chi.Mux) {
+// 	root := "./public"
+// 	fs := http.FileServer(http.Dir(root))
 
-	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
-		if _, err := os.Stat(root + r.URL.Path); os.IsNotExist(err) {
-			http.StripPrefix(r.URL.Path, fs).ServeHTTP(w, r)
-		} else {
-			fs.ServeHTTP(w, r)
-		}
-	})
-}
+// 	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+// 		if _, err := os.Stat(root + r.URL.Path); os.IsNotExist(err) {
+// 			http.StripPrefix(r.URL.Path, fs).ServeHTTP(w, r)
+// 		} else {
+// 			fs.ServeHTTP(w, r)
+// 		}
+// 	})
+// }
 
 // // FileServer is serving static files
 // func FileServer(r chi.Router, public string, static string) {
