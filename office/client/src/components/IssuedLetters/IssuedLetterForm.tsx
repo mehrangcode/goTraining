@@ -1,5 +1,6 @@
 import IssuedLetterStore from "@src/pages/issuedLetters/store"
 import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 
 const defaultValue = {
     number: 0,
@@ -15,11 +16,20 @@ const defaultValue = {
 function IssuedLetterForm() {
     const [values, setValues] = useState(JSON.parse(JSON.stringify(defaultValue)))
     const store = IssuedLetterStore()
+    const {letterId} = useParams()
+    console.log(letterId)
+    useEffect(() => {
+        if(letterId) {
+            store.fetchItemById(letterId)
+        }
+    }, [letterId])
     useEffect(() => {
         setValues({
             ...(store.targetItem || JSON.parse(JSON.stringify(defaultValue))),
         })
     }, [store.targetItem])
+
+    const nav = useNavigate()
     async function onSubmitHandler(e) {
         e.preventDefault()
         try {
@@ -32,6 +42,7 @@ function IssuedLetterForm() {
                 await store.create({ ...values, number: +values.number })
             }
             setValues(JSON.parse(JSON.stringify(defaultValue)))
+            nav("/letters/issued")
         } catch (error) {
         }
     }

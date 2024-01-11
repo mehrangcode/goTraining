@@ -52,6 +52,7 @@ func RegisterRoutes() http.Handler {
 		r.Get("/", issued_letters_handlers.GetAll)
 		r.Post("/", issued_letters_handlers.Create)
 		r.Route("/{letterId}", func(r chi.Router) {
+			r.Get("/", issued_letters_handlers.GetById)
 			r.Put("/", issued_letters_handlers.Update)
 			r.Delete("/", issued_letters_handlers.Delete)
 		})

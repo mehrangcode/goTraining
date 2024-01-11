@@ -5,6 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"mehrangcode.ir/office/utils"
 )
 
 func sqliteDbConnect() {
@@ -80,6 +81,25 @@ func MigrateDB() error {
 		);
 		`
 	_, err = DBx.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO users (name,email,password) values(?,?,?)`
+	hash, err := utils.HashingPassword("1234")
+	if err != nil {
+		panic(err)
+	}
+	_, err = DBx.Exec(query, "Mehran Ganji", "Mehran@mail.com", hash)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO subjects (label) values(?)`
+	_, err = DBx.Exec(query, "General")
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO subjects (label) values(?)`
+	_, err = DBx.Exec(query, "Voucher")
 	if err != nil {
 		panic(err)
 	}

@@ -27,6 +27,16 @@ func (h *Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJson(w, 200, IssuedLetters)
 }
 
+func (h *Handler) GetById(w http.ResponseWriter, r *http.Request) {
+	letterId := chi.URLParam(r, "letterId")
+	IssuedLetterItem, err := h.repo.GetById(letterId)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusInternalServerError)
+		return
+	}
+	utils.WriteJson(w, 200, IssuedLetterItem)
+}
+
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var dto types.IssuedLetterDTO
 	var err error

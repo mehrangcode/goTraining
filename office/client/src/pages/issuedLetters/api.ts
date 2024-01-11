@@ -6,6 +6,10 @@ export async function getAll() {
     return await axios.get(api)
 }
 
+export async function getItemById(itemId) {
+    return await axios.get(api + "/" + itemId)
+}
+
 export async function createUser(payload) {
     return await axios.post(api, payload)
 }

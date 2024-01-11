@@ -4,9 +4,9 @@ import (
 	"errors"
 
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/crypto/bcrypt"
 	"mehrangcode.ir/office/internal/types"
 	"mehrangcode.ir/office/pkg/database"
+	"mehrangcode.ir/office/utils"
 )
 
 type UserSqliteRepository struct {
@@ -46,7 +46,7 @@ func (repo *UserSqliteRepository) Create(payload types.UserDTO) (string, error) 
 	if err != nil {
 		return "", err
 	}
-	hasingPassword, err := hashingPassword(payload.Password)
+	hasingPassword, err := utils.HashingPassword(payload.Password)
 	if err != nil {
 		return "", err
 	}
@@ -87,9 +87,4 @@ func (repo *UserSqliteRepository) Delete(userId string) error {
 	}
 
 	return nil
-}
-
-func hashingPassword(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(hash), err
 }

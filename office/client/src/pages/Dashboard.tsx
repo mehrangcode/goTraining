@@ -19,10 +19,10 @@ function Dashboard() {
                     <Route path="/users" element={<Users />} />
                     <Route path="/letters/income" element={<IncomeLettersPage />} />
                     <Route path="/letters/income/modify" element={<IncomeLetterForm />} />
-                    <Route path="/letters/income/modify/:id" element={<IncomeLetterForm />} />
+                    <Route path="/letters/income/modify/:letterId" element={<IncomeLetterForm />} />
                     <Route path="/letters/issued" element={<IssuedLettersPage />} />
                     <Route path="/letters/issued/modify" element={<IssuedLetterForm />} />
-                    <Route path="/letters/issued/modify/:id" element={<IssuedLetterForm />} />
+                    <Route path="/letters/issued/modify/:letterId" element={<IssuedLetterForm />} />
                     <Route path="/subjects" element={<SubjectsPage />} />
                     <Route path="/" element={<Home />} />
                 </Routes>

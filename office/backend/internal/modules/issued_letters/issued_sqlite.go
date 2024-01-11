@@ -19,13 +19,33 @@ func InitialSqliteStorage() *SqliteStorage {
 }
 
 func (repo *SqliteStorage) GetAll() ([]types.IssuedLetterViewModel, error) {
-	query := `SELECT * FROM issued_letters`
+	query := `SELECT issued_letters.*,
+	subjects.label AS subjectName,
+	users.name AS operatorName 
+	FROM issued_letters
+	LEFT OUTER JOIN subjects ON issued_letters.subjectId = subjects.id
+	LEFT OUTER JOIN users ON issued_letters.operatorId = users.id;`
 	var list []types.IssuedLetterViewModel
 	err := repo.DB.Select(&list, query)
 	if err != nil {
 		return nil, err
 	}
 	return list, nil
+}
+func (repo *SqliteStorage) GetById(itemId string) (types.IssuedLetterViewModel, error) {
+	query := `SELECT issued_letters.*,
+	subjects.label AS subjectName,
+	users.name AS operatorName 
+	FROM issued_letters
+	LEFT OUTER JOIN subjects ON issued_letters.subjectId = subjects.id
+	LEFT OUTER JOIN users ON issued_letters.operatorId = users.id
+	WHERE issued_letters.id = ?;`
+	var item types.IssuedLetterViewModel
+	err := repo.DB.Get(&item, query, itemId)
+	if err != nil {
+		return types.IssuedLetterViewModel{}, err
+	}
+	return item, nil
 }
 
 func (repo *SqliteStorage) Create(payload types.IssuedLetterDTO) (string, error) {
@@ -44,7 +64,7 @@ func (repo *SqliteStorage) Create(payload types.IssuedLetterDTO) (string, error)
 		payload.Owner,
 		payload.Destination,
 		payload.Status,
-		payload.OperatorId,
+		1,
 	)
 	itemId := ""
 	err = row.Scan(&itemId)
@@ -77,7 +97,7 @@ func (repo *SqliteStorage) Update(itemId string, payload types.IssuedLetterDTO) 
 		payload.Owner,
 		payload.Destination,
 		payload.Status,
-		payload.OperatorId,
+		1,
 		itemId).Scan(&id)
 	if err != nil {
 		return errors.New("issued_letter was not found")

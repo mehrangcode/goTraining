@@ -7,11 +7,13 @@ interface UserType {
     title: string
     content: string
     subjectId: string
-    created_At: string
+    subjectName: string
+    created_at: string
     owner: string
     destination: string
     status: string
     operatorId: string
+    operatorName: string
 }
 interface IssuedLetterStoreType {
     loading: boolean
@@ -19,6 +21,7 @@ interface IssuedLetterStoreType {
     targetItem: UserType
     selectUser: (user: UserType) => void
     fetchList: () => void
+    fetchItemById: (letterId: string) => void
     create: (payload: UserType) => void
     update: (userId: string, payload: UserType) => void
     delete: (userId: string) => void
@@ -33,6 +36,10 @@ const IssuedLetterStore = create<IssuedLetterStoreType>()(
             const res = await apis.getAll()
             set({ list: res?.data || [] })
         },
+        fetchItemById: async (letterId) => {
+            const res = await apis.getItemById(letterId)
+            set({ targetItem: res?.data })
+        },
         create: async (payload: UserType) => {
             set({ loading: true })
             try {
@@ -46,11 +53,8 @@ const IssuedLetterStore = create<IssuedLetterStoreType>()(
         update: async (userId: string, payload: UserType) => {
             set({ loading: true })
             try {
-                const res = await apis.updateUser(userId, payload)
-                const updatedList: UserType[] = JSON.parse(JSON.stringify(get().list))
-                const i = updatedList.findIndex(x => x.id === userId)
-                updatedList[i] = res.data?.user
-                set({ loading: false, targetItem: undefined, list: updatedList })
+                await apis.updateUser(userId, payload)
+                set({ loading: false, targetItem: undefined })
             } catch (error) {
                 set({ loading: false })
                 throw new Error(error)

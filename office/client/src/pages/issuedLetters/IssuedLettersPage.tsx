@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import IssuedStore from "./store"
+import DoDate from "@doolooper/dodate"
 
 function IssuedLettersPage() {
   const issuedStore = IssuedStore()
@@ -21,7 +22,8 @@ function IssuedLettersPage() {
             <th>Content</th>
             <th>status</th>
             <th>Created Date</th>
-            <th>SubjectId</th>
+            <th>Subject</th>
+            <th>Operator</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -35,11 +37,12 @@ function IssuedLettersPage() {
               <td>{record.destination}</td>
               <td>{record.content}</td>
               <td>{record.status}</td>
-              <td>{record.created_At}</td>
-              <td>{record.subjectId}</td>
+              <td>{DoDate.parse(new Date(record.created_at).toISOString()).formatJalali("YYYY/MM/DD")}</td>
+              <td>{record.subjectName}</td>
+              <td>{record.operatorName}</td>
               <td>
                 <div className="action">
-                  <button onClick={() => issuedStore.selectUser(record)}>Edit</button>
+                  <button onClick={() =>  nav("modify/"+record.id)}>Edit</button>
                   <button onClick={() => issuedStore.delete(record.id)}>Delete</button>
                 </div>
               </td>

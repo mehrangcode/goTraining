@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type jsonResponse struct {
@@ -69,4 +71,9 @@ func ResponseToError(w http.ResponseWriter, err error, status ...int) error {
 	payload.Data = nil
 
 	return WriteJson(w, statusCode, payload)
+}
+
+func HashingPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(hash), err
 }
