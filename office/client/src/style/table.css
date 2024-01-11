@@ -34,7 +34,7 @@ td {
 }
 
 tr:nth-child(even) {
-    background: var(--evenTrBg);
+    background: var(--eventChildBG);
 }
 
 div.action {

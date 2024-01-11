@@ -1,13 +1,27 @@
 :root {
   --background: #444;
   --fontColor: #eee;
-  --primary: lightcoral;
+  --primary: #79aef3;
   --primaryFontColor: #444;
   --borderColor: #666;
-  --inputBorderColor: #888585;
-  --thBackground: #191919;
+  --borderColor-light: #888585;
+  --thBackground: #2f2f2f;
   --thFontColor: #eee;
-  --evenTrBg: #535353;
+  --eventChildBG: #535353;
+  --navBoxShadow: #666
+}
+
+html[data-theme=light] {
+  --background: #eee;
+  --fontColor: #444;
+  --primary: #3d5a80;
+  --primaryFontColor: #eee;
+  --borderColor: #a8a8a8;
+  --borderColor-light: #b8b8b8;
+  --thBackground: #b5b5b5;
+  --thFontColor: #eee;
+  --eventChildBG: #d6d6d6;
+  --navBoxShadow: #d0d0d0;
 }
 
 * {

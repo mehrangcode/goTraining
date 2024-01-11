@@ -1,7 +1,9 @@
 @import "App.css";
+@import "nav.css";
 @import "table.css";
 @import "userPage.css";
 @import "form.css";
 @import "grid.css";
 @import "lettersForm.css";
 @import "subjectForm.css";
+@import "select.css";

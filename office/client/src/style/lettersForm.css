@@ -1,19 +1,20 @@
-.letterFormHeaderSection {
-    gap: 2rem;
+form.issuedLetterForm {
+    display: flex;
+    gap: 1rem;
 }
 
-.numberSection {
-    width: 12rem;
+.sidebar {
+    width: 20rem;
     flex-shrink: 0;
+    border: 1px solid var(--borderColor);
+    padding: 1rem;
     border-radius: 0.5rem;
 }
 
-.titleSection {
-    width: 25rem;
-}
-
 textarea#content {
-    height: 20rem;
+    width: 49.625rem;
+    height: 70.1875rem;
+    flex-shrink: 0;
 }
 
 .issuedLetterForm .actionFooter {

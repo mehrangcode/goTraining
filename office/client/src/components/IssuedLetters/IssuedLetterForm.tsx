@@ -1,6 +1,7 @@
 import IssuedLetterStore from "@src/pages/issuedLetters/store"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import Select from "../shared/select/Select"
 
 const defaultValue = {
     number: undefined,
@@ -12,6 +13,7 @@ const defaultValue = {
     destination: "",
     status: null,
     operatorId: "",
+    template: ""
 }
 function IssuedLetterForm() {
     const [values, setValues] = useState(JSON.parse(JSON.stringify(defaultValue)))
@@ -55,54 +57,63 @@ function IssuedLetterForm() {
     }
     return (
         <form className="issuedLetterForm" onSubmit={onSubmitHandler} autoComplete="off">
-            <div className="row letterFormHeaderSection">
-                <div className="col numberSection">
-                    <div className="fomControll">
-                        <label htmlFor="number">number</label>
-                        <input type="text" id="number" value={values.number} onChange={(e) => {
-                            e.preventDefault()
-                            onChangeHandler("number", e.target.value)
-                        }} />
-                    </div>
-                    <div className="fomControll">
-                        <label htmlFor="issuedDate">issuedDate</label>
-                        <input type="text" id="issuedDate" value={values.issuedDate} onChange={(e) => {
-                            e.preventDefault()
-                            onChangeHandler("issuedDate", e.target.value)
-                        }} />
-                    </div>
+            <div className="sidebar">
+                <div className="formControll">
+                    <label htmlFor="template">Template</label>
+                    <Select
+                        value={values.temp}
+                        options={[
+                            { id: "temp1", label: "Temp 1" },
+                            { id: "temp2", label: "Temp 2" },
+                            { id: "temp3", label: "Temp 3" },
+                            { id: "temp4", label: "Temp 4" }
+                        ]}
+                        onChange={(value: string) => {
+                            onChangeHandler("temp", value)
+                        }}
+                    />
                 </div>
-                <div className="col titleSection">
-                    <div className="fomControll">
-                        <label htmlFor="title">title</label>
-                        <input type="text" id="title" value={values.title} onChange={(e) => {
-                            e.preventDefault()
-                            onChangeHandler("title", e.target.value)
-                        }} />
-                    </div>
-                    <div className="fomControll">
-                        <label htmlFor="subjectId">subjectId</label>
-                        <input type="text" id="subjectId" value={values.subjectId} onChange={(e) => {
-                            e.preventDefault()
-                            onChangeHandler("subjectId", e.target.value)
-                        }} />
-                    </div>
+                <div className="fomControll">
+                    <label htmlFor="number">number</label>
+                    <input type="text" id="number" value={values.number} onChange={(e) => {
+                        e.preventDefault()
+                        onChangeHandler("number", e.target.value)
+                    }} />
+                </div>
+                <div className="fomControll">
+                    <label htmlFor="issuedDate">issuedDate</label>
+                    <input type="text" id="issuedDate" value={values.issuedDate} onChange={(e) => {
+                        e.preventDefault()
+                        onChangeHandler("issuedDate", e.target.value)
+                    }} />
+                </div>
+                <div className="fomControll">
+                    <label htmlFor="title">title</label>
+                    <input type="text" id="title" value={values.title} onChange={(e) => {
+                        e.preventDefault()
+                        onChangeHandler("title", e.target.value)
+                    }} />
+                </div>
+                <div className="fomControll">
+                    <label htmlFor="subjectId">subjectId</label>
+                    <input type="text" id="subjectId" value={values.subjectId} onChange={(e) => {
+                        e.preventDefault()
+                        onChangeHandler("subjectId", e.target.value)
+                    }} />
+                </div>
+                <div className="actionFooter">
+                    <button type="submit">{store.targetItem ? "Edit" : "Save"}</button>
+                    <button type="button" onClick={() => {
+                        store.selectUser(undefined)
+                        nav("/letters/issued")
+                    }}>Cancel</button>
                 </div>
             </div>
-            <div className="fomControll">
-                <label htmlFor="subjectId">content</label>
-                <textarea id="content" value={values.content} onChange={(e) => {
-                    e.preventDefault()
-                    onChangeHandler("content", e.target.value)
-                }} />
-            </div>
-            <div className="actionFooter">
-                <button type="submit">{store.targetItem ? "Edit" : "Save"}</button>
-                <button type="button" onClick={() => {
-                    store.selectUser(undefined)
-                    nav("/letters/issued")
-                }}>Cancel</button>
-            </div>
+            <textarea id="content" value={values.content} onChange={(e) => {
+                e.preventDefault()
+                onChangeHandler("content", e.target.value)
+            }} />
+
         </form>
     )
 }

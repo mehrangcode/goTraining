@@ -1,18 +1,18 @@
+import IncomeLetterForm from "@src/components/IncomeLetters/IncomeLetterForm"
+import IssuedLetterForm from "@src/components/IssuedLetters/IssuedLetterForm"
+import Nav from "@src/components/nav/Nav"
 import { Route, Routes } from "react-router-dom"
 import Home from "./Home"
-import Users from "./users/Users"
 import IncomeLettersPage from "./incomeLetters/IncomeLettersPage"
-import IncomeLetterForm from "@src/components/IncomeLetters/IncomeLetterForm"
-import SubjectsPage from "./subjects/SubjectsPage"
-import { Link } from "react-router-dom"
 import IssuedLettersPage from "./issuedLetters/IssuedLettersPage"
-import IssuedLetterForm from "@src/components/IssuedLetters/IssuedLetterForm"
+import SubjectsPage from "./subjects/SubjectsPage"
+import Users from "./users/Users"
 
 function Dashboard() {
     return (
         <div className="dashboard">
             <header>
-                <nav className="nav"><Link to={"./"}>OFFICE</Link></nav>
+                <Nav />
             </header>
             <div className="rootElement">
                 <Routes>
