@@ -13,7 +13,7 @@ function SubjectsPage() {
       <table className="list">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Label</th>
             <th>Archive</th>
             <th>action</th>
           </tr>

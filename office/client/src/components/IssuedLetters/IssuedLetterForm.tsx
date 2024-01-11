@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
 const defaultValue = {
-    number: 0,
+    number: undefined,
     title: "",
     content: "",
     subjectId: "",
@@ -16,10 +16,10 @@ const defaultValue = {
 function IssuedLetterForm() {
     const [values, setValues] = useState(JSON.parse(JSON.stringify(defaultValue)))
     const store = IssuedLetterStore()
-    const {letterId} = useParams()
+    const { letterId } = useParams()
     console.log(letterId)
     useEffect(() => {
-        if(letterId) {
+        if (letterId) {
             store.fetchItemById(letterId)
         }
     }, [letterId])
@@ -54,9 +54,9 @@ function IssuedLetterForm() {
         })
     }
     return (
-        <form className="issuedLetterForm" onSubmit={onSubmitHandler}>
-            <div className="row">
-                <div className="col">
+        <form className="issuedLetterForm" onSubmit={onSubmitHandler} autoComplete="off">
+            <div className="row letterFormHeaderSection">
+                <div className="col numberSection">
                     <div className="fomControll">
                         <label htmlFor="number">number</label>
                         <input type="text" id="number" value={values.number} onChange={(e) => {
@@ -64,6 +64,15 @@ function IssuedLetterForm() {
                             onChangeHandler("number", e.target.value)
                         }} />
                     </div>
+                    <div className="fomControll">
+                        <label htmlFor="issuedDate">issuedDate</label>
+                        <input type="text" id="issuedDate" value={values.issuedDate} onChange={(e) => {
+                            e.preventDefault()
+                            onChangeHandler("issuedDate", e.target.value)
+                        }} />
+                    </div>
+                </div>
+                <div className="col titleSection">
                     <div className="fomControll">
                         <label htmlFor="title">title</label>
                         <input type="text" id="title" value={values.title} onChange={(e) => {
@@ -79,19 +88,21 @@ function IssuedLetterForm() {
                         }} />
                     </div>
                 </div>
-
-                <div className="col">
-                    <div className="fomControll">
-                        <label htmlFor="subjectId">content</label>
-                        <textarea id="content" value={values.content} onChange={(e) => {
-                            e.preventDefault()
-                            onChangeHandler("content", e.target.value)
-                        }} />
-                    </div>
-                </div>
             </div>
-            <button type="submit">{store.targetItem ? "Edit" : "Save"}</button>
-            {store.targetItem ? <button type="button" onClick={() => store.selectUser(undefined)}>Reset</button> : null}
+            <div className="fomControll">
+                <label htmlFor="subjectId">content</label>
+                <textarea id="content" value={values.content} onChange={(e) => {
+                    e.preventDefault()
+                    onChangeHandler("content", e.target.value)
+                }} />
+            </div>
+            <div className="actionFooter">
+                <button type="submit">{store.targetItem ? "Edit" : "Save"}</button>
+                <button type="button" onClick={() => {
+                    store.selectUser(undefined)
+                    nav("/letters/issued")
+                }}>Cancel</button>
+            </div>
         </form>
     )
 }

@@ -50,7 +50,7 @@ function SubjectForm() {
                 }} />
             </div>
             <button type="submit">{subjectStore.targetItem ? "Edit" : "Save"}</button>
-            {subjectStore.targetItem ? <button type="button" onClick={() => subjectStore.selectSubject(undefined)}>Reset</button> : null}
+            {subjectStore.targetItem ? <button type="button" onClick={() => subjectStore.selectSubject(undefined)}>Cancel</button> : null}
         </form>
     )
 }

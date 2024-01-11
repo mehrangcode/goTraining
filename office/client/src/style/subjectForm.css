@@ -1,0 +1,10 @@
+form.subjectForm {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.subjectForm .fomControll {
+    width: 20rem;
+}

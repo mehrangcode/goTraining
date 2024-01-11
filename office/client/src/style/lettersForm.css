@@ -1,0 +1,24 @@
+.letterFormHeaderSection {
+    gap: 2rem;
+}
+
+.numberSection {
+    width: 12rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+}
+
+.titleSection {
+    width: 25rem;
+}
+
+textarea#content {
+    height: 20rem;
+}
+
+.issuedLetterForm .actionFooter {
+    padding-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: row-reverse;
+}

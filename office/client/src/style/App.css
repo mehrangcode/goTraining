@@ -4,6 +4,7 @@
   --primary: lightcoral;
   --primaryFontColor: #444;
   --borderColor: #666;
+  --inputBorderColor: #888585;
   --thBackground: #191919;
   --thFontColor: #eee;
   --evenTrBg: #535353;
@@ -27,6 +28,7 @@ button {
   color: var(--primaryFontColor);
   cursor: pointer;
   border-radius: 0.25rem;
+  height: 2rem;
 }
 
 .rootElement {
