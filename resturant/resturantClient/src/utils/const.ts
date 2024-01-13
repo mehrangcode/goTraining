@@ -1,3 +1,3 @@
 export const ConstValues = {
-    backUri: "http://localhost:3000"
+    backUri: import.meta.env.VITE_SERVER
 }
