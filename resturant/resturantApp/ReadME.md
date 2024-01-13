@@ -1,4 +1,4 @@
 ### Resturant Managment App ###
 
 ## commands: 
-    server: compiledaemon -command="./office"
+    server: compiledaemon -command="./app"
