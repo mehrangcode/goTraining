@@ -1,0 +1,11 @@
+section.view {
+    display: flex;
+    gap: 1rem;
+}
+
+.templates {
+    width: 20rem;
+    border: 1px solid var(--borderColor);
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+}

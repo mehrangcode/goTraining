@@ -6,6 +6,7 @@ import Home from "./Home"
 import IncomeLettersPage from "./incomeLetters/IncomeLettersPage"
 import IssuedLettersPage from "./issuedLetters/IssuedLettersPage"
 import SubjectsPage from "./subjects/SubjectsPage"
+import LetterTemplatesPage from "./templates/LetterTemplatesPage"
 import Users from "./users/Users"
 
 function Dashboard() {
@@ -17,6 +18,7 @@ function Dashboard() {
             <div className="rootElement">
                 <Routes>
                     <Route path="/users" element={<Users />} />
+                    <Route path="/letters/templates" element={<LetterTemplatesPage />} />
                     <Route path="/letters/income" element={<IncomeLettersPage />} />
                     <Route path="/letters/income/modify" element={<IncomeLetterForm />} />
                     <Route path="/letters/income/modify/:letterId" element={<IncomeLetterForm />} />
