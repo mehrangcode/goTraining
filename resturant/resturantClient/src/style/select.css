@@ -1,0 +1,56 @@
+.select {
+    border: 1px solid var(--borderColor-light);
+    position: relative;
+    border-radius: 0.25rem;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 .5rem;
+}
+
+.selectBox {
+    position: absolute;
+    top: 100%;
+    z-index: 2;
+    background: var(--background);
+    width: 100%;
+    border-radius: 0.25rem;
+    border: none;
+    height: 0;
+    overflow-y: hidden;
+    transition: all 300ms;
+}
+
+.selectBox.open {
+    height: 12rem;
+    overflow-y: auto;
+    border: 1px solid var(--borderColor);
+}
+
+.option {
+    padding: 0 .5rem;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--borderColor);
+    cursor: pointer;
+}
+
+.option:nth-child(even) {
+    background: var(--eventChildBG);
+}
+
+.option:hover {
+    background: var(--primary);
+    color: var(--primaryFontColor);
+}
+
+input.selectInput {
+    background: transparent;
+    border: none;
+    color: var(--fontColor);
+}
+
+input.selectInput {
+    outline: none;
+}

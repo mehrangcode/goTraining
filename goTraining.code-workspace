@@ -20,6 +20,9 @@
 		},
 		{
 			"path": "resturant/resturantApp"
+		},
+		{
+			"path": "resturant/resturantClient"
 		}
 	]
 }

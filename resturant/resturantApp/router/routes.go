@@ -23,7 +23,7 @@ func RegisterRoutes() http.Handler {
 	r.Use(middleware.Logger)
 
 	user_handler := handlers.NewUsersHandler()
-	r.Route("/users", func(r chi.Router) {
+	r.Route("/api/users", func(r chi.Router) {
 		r.Get("/", user_handler.GetAll)
 		r.Post("/", user_handler.Create)
 		r.Route("/{userId}", func(r chi.Router) {
