@@ -37,6 +37,19 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
+	query = `
+		CREATE TABLE IF NOT EXISTS foods(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			description,
+			status INTEGER DEFAULT 1,
+			photos
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 	query = ` INSERT INTO users (name,email,password) values(?,?,?)`
 	hash, err := utils.HashingPassword("1234")
 	if err != nil {
