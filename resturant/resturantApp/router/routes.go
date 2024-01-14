@@ -14,7 +14,7 @@ func RegisterRoutes() http.Handler {
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
@@ -36,8 +36,8 @@ func RegisterRoutes() http.Handler {
 		r.Get("/", food_handler.GetAll)
 		r.Post("/", food_handler.Create)
 		r.Route("/{foodId}", func(r chi.Router) {
-			r.Put("/changeStatus/{status}", food_handler.ChangeStatus)
 			r.Put("/", food_handler.Update)
+			r.Patch("/changeStatus/{status}", food_handler.ChangeStatus)
 			r.Delete("/", food_handler.Delete)
 		})
 	})

@@ -5,6 +5,7 @@ function Nav() {
         <nav className="nav"><Link to={"./"}>OFFICE</Link>
         <ul className="topMenu">
             <li><Link to="/users">Users</Link> </li>
+            <li><Link to="/foods">foods</Link> </li>
         </ul>
         </nav>
     )
