@@ -52,7 +52,7 @@ function FoodForm() {
         })
     }
     return (
-        <form className="foodForm" onSubmit={onSubmitHandler}>
+        <form className="horizontal" onSubmit={onSubmitHandler}>
             <div className="fomControll">
                 <label htmlFor="name">Name</label>
                 <input type="text" id="name" value={values.name} onChange={(e) => {
