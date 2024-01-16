@@ -3,6 +3,7 @@ import Home from "./Home"
 import Users from "./users/Users"
 import Nav from "@src/components/nav/Nav"
 import FoodsPage from "./foods/FoodsPage"
+import MenusPage from "./menus/MenusPage"
 
 function Dashboard() {
     return (
@@ -12,6 +13,7 @@ function Dashboard() {
             </header>
             <div className="rootElement">
                 <Routes>
+                    <Route path="/menus" element={<MenusPage />} />
                     <Route path="/foods" element={<FoodsPage />} />
                     <Route path="/users" element={<Users />} />
                     <Route path="/" element={<Home />} />
