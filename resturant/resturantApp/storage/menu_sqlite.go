@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	"mehrangcode.ir/resturant/app/database"
 	"mehrangcode.ir/resturant/app/models"
@@ -17,4 +19,5 @@ func NewMenuSqliteDB() *MenuSqliteDB {
 }
 func Create(payload models.MenuDTO) {
 	query := `INSERT INTO menus (title,description,status) VALUES(?,?,?)`
+	fmt.Println("QUERY: ", query)
 }
