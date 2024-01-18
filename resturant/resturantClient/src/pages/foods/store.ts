@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import * as apis from "./api"
 
-interface FoodType {
+export interface FoodType {
     id?: string
     name: string
     description: string

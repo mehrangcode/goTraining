@@ -1,0 +1,51 @@
+.foodsListPreview {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.foodCard {
+	border: 1px solid var(--borderColor);
+	border-radius: 0.5rem;
+	height: 15rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 12rem;
+	flex-shrink: 0;
+}
+
+.foodAvatar {
+	background: lightgray;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	margin: 0.5rem auto 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #444;
+}
+
+.foodName {
+	width: 100%;
+	color: var(--fontColor);
+	text-align: center;
+	border-bottom: 1px solid var(--borderColor);
+}
+
+.foodDescription {
+	flex: 1;
+	overflow: auto;
+	padding: 0.5rem;
+	width: 100%;
+}
+
+.foodActionWrapper {
+	width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+	padding: 0.5rem 0;
+	border-top: 1px solid var(--borderColor);
+}
