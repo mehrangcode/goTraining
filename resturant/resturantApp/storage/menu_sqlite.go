@@ -73,9 +73,29 @@ func (repo *MenuSqliteDB) GetAll() ([]models.MenuViewModel, error) {
 			menus[menuID] = menu
 		}
 		var section *models.SectionViewModel
+		var food *models.SectionFoodType
 		for i := range menu.Sections {
 			if menu.Sections[i].ID == sectionID {
 				section = &menu.Sections[i]
+				foodFound := false
+				for j, f := range section.Foods {
+					if f.Section_id == sectionID && foodID == menu.Sections[i].Foods[j].ID && foodPrice == menu.Sections[i].Foods[j].Price {
+						foodFound = true
+						break
+					}
+				}
+				if !foodFound {
+					food = &models.SectionFoodType{
+						Price:       foodPrice,
+						Section_id:  sectionID,
+						ID:          foodID,
+						Name:        foodName,
+						Description: foodDescription,
+						Status:      foodStatus,
+						Photos:      foodPhotos,
+					}
+					section.Foods = append(section.Foods, *food)
+				}
 				break
 			}
 		}
@@ -83,7 +103,7 @@ func (repo *MenuSqliteDB) GetAll() ([]models.MenuViewModel, error) {
 			section = &models.SectionViewModel{
 				ID: sectionID, Title: sectionTitle,
 			}
-			FoodSection := models.SectionFoodType{
+			food = &models.SectionFoodType{
 				Price:       foodPrice,
 				Section_id:  sectionID,
 				ID:          foodID,
@@ -92,7 +112,7 @@ func (repo *MenuSqliteDB) GetAll() ([]models.MenuViewModel, error) {
 				Status:      foodStatus,
 				Photos:      foodPhotos,
 			}
-			section.Foods = append(section.Foods, FoodSection)
+			section.Foods = append(section.Foods, *food)
 			menu.Sections = append(menu.Sections, *section)
 		}
 
@@ -165,77 +185,46 @@ func (repo *MenuSqliteDB) Create(payload models.MenuDTO) (string, error) {
 	return fmt.Sprint(menu_id), nil
 }
 
-// func main() {
-// 	// Example data from the database
-// 	data := []struct {
-// 		MenuID       string
-// 		MenuTitle    string
-// 		SectionID    string
-// 		SectionTitle string
-// 		FoodID       string
-// 		FoodPrice    int
-// 		FoodName     string
-// 		FoodStatus   uint
-// 	}{
-// 		{"1", "sunday", "1", "starter", "1", 200000, "Pizza", 1},
-// 		{"1", "sunday", "1", "starter", "3", 200000, "Spagety", 1},
-// 		{"1", "sunday", "2", "main", "1", 80000, "Pizza", 1},
-// 		{"1", "sunday", "2", "main", "2", 500000, "Hot dog", 1},
-// 		{"1", "sunday", "2", "main", "1", 1000000, "Pizza", 1},
-// 		// Add more records as needed
-// 	}
+func (repo *MenuSqliteDB) Delete(itemId string) error {
+	tx, err := repo.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	query := `DELETE FROM section_foods
+	WHERE section_id IN (
+	  SELECT id FROM sections
+	  WHERE menu_id = ?
+	);`
+	stmtx, err := tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+	_, err = stmtx.Exec(itemId)
+	if err != nil {
+		return err
+	}
+	query = `DELETE FROM sections
+	WHERE menu_id = ?;`
+	stmtx, err = tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+	_, err = stmtx.Exec(itemId)
+	if err != nil {
+		return err
+	}
+	query = `DELETE FROM menus
+	WHERE id = ?;`
+	stmtx, err = tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+	_, err = stmtx.Exec(itemId)
+	if err != nil {
+		return err
+	}
+	tx.Commit()
 
-// 	// Process the data into the desired JSON structure
-// 	menusMap := make(map[string]*Menu)
-// 	for _, record := range data {
-// 		menu, exists := menusMap[record.MenuID]
-// 		if !exists {
-// 			menu = &Menu{
-// 				ID:    record.MenuID,
-// 				Title: record.MenuTitle,
-// 			}
-// 			menusMap[record.MenuID] = menu
-// 		}
-
-// 		var section *Section
-// 		found := false
-// 		for i, sec := range menu.Sections {
-// 			if sec.ID == record.SectionID {
-// 				section = &menu.Sections[i]
-// 				found = true
-// 				break
-// 			}
-// 		}
-// 		if !found {
-// 			section = &Section{
-// 				ID:    record.SectionID,
-// 				Title: record.SectionTitle,
-// 			}
-// 			menu.Sections = append(menu.Sections, *section)
-// 		}
-
-// 		food := Food{
-// 			Price: record.FoodPrice,
-// 			Name:  record.FoodName,
-// 			// Description and Photos are nil in the example data
-// 			Status: record.FoodStatus,
-// 		}
-// 		section.Foods = append(section.Foods, food)
-// 	}
-
-// 	// Convert the menus map to a slice
-// 	var menus []Menu
-// 	for _, menu := range menusMap {
-// 		menus = append(menus, *menu)
-// 	}
-
-// 	// Marshal the slice to JSON
-// 	jsonData, err := json.MarshalIndent(menus, "", "  ")
-// 	if err != nil {
-// 		fmt.Println("Error marshaling to JSON:", err)
-// 		return
-// 	}
-
-// 	// Print the JSON
-// 	fmt.Println(string(jsonData))
-// }
+	return nil
+}

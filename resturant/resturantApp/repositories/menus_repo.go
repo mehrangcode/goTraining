@@ -7,5 +7,5 @@ type MenuRepo interface {
 	// GetById(id string) (models.MenuViewModel, error)
 	Create(payload models.MenuDTO) (string, error)
 	// Update(userId string, payload models.MenuDTO) error
-	// Delete(userId string) error
+	Delete(userId string) error
 }
