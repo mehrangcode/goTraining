@@ -41,6 +41,16 @@ func RegisterRoutes() http.Handler {
 			r.Delete("/", food_handler.Delete)
 		})
 	})
+	food_category_handler := handlers.NewFoodCategoriesHandler()
+	r.Route("/api/foodCategories", func(r chi.Router) {
+		r.Get("/", food_category_handler.GetAll)
+		r.Post("/", food_category_handler.Create)
+		r.Route("/{catId}", func(r chi.Router) {
+			r.Put("/", food_category_handler.Update)
+			r.Patch("/changeStatus/{status}", food_category_handler.ChangeStatus)
+			r.Delete("/", food_category_handler.Delete)
+		})
+	})
 	menu_handler := handlers.NewMenusHandler()
 	r.Route("/api/menus", func(r chi.Router) {
 		r.Get("/", menu_handler.GetAll)

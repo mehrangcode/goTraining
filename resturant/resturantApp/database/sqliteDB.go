@@ -5,11 +5,12 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"mehrangcode.ir/resturant/app/utils"
 )
 
 func sqliteDbConnect() {
-	// db, err := sqlx.Open("sqlite3", ":memory:")
-	db, err := sqlx.Open("sqlite3", "data.db")
+	db, err := sqlx.Open("sqlite3", ":memory:")
+	// db, err := sqlx.Open("sqlite3", "data.db")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -44,6 +45,19 @@ func MigrateDB() error {
 			description,
 			status INTEGER DEFAULT 1,
 			photos
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	query = `
+		CREATE TABLE IF NOT EXISTS food_categories(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			title TEXT NOT NULL,
+			description,
+			status INTEGER DEFAULT 1,
+			avatar
 		);
 		`
 	_, err = DB.Exec(query)
@@ -86,29 +100,29 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
-	// query = ` INSERT INTO users (name,email,password) values(?,?,?)`
-	// hash, err := utils.HashingPassword("1234")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// _, err = DB.Exec(query, "Mehran Ganji", "Mehran@mail.com", hash)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// query = ` INSERT INTO foods (name,status) values(?,?)`
-	// _, err = DB.Exec(query, "Pizza", 1)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// query = ` INSERT INTO foods (name,status) values(?,?)`
-	// _, err = DB.Exec(query, "Hot dog", 1)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// query = ` INSERT INTO foods (name,status) values(?,?)`
-	// _, err = DB.Exec(query, "Spagety", 1)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	query = ` INSERT INTO users (name,email,password) values(?,?,?)`
+	hash, err := utils.HashingPassword("1234")
+	if err != nil {
+		panic(err)
+	}
+	_, err = DB.Exec(query, "Mehran Ganji", "Mehran@mail.com", hash)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO foods (name,status) values(?,?)`
+	_, err = DB.Exec(query, "Pizza", 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO foods (name,status) values(?,?)`
+	_, err = DB.Exec(query, "Hot dog", 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO foods (name,status) values(?,?)`
+	_, err = DB.Exec(query, "Spagety", 1)
+	if err != nil {
+		panic(err)
+	}
 	return err
 }
