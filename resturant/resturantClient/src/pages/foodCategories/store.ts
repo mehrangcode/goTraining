@@ -1,27 +1,26 @@
 import { create } from 'zustand'
 import * as apis from "./api"
 
-export interface FoodType {
+export interface FoodCategoryType {
     id?: string
-    name: string
+    title: string
     description: string
     status: number
     photos: string
-    categories: string[] | {title: string; id: string}[]
 }
-interface FoodStoreType {
+interface FoodCategoryStoreType {
     loading: boolean
-    list: FoodType[]
-    targetItem: FoodType
-    selectFood: (food: FoodType) => void
+    list: FoodCategoryType[]
+    targetItem: FoodCategoryType
+    selectFood: (food: FoodCategoryType) => void
     fetchList: () => void
-    create: (payload: FoodType) => void
-    update: (foodId: string, payload: FoodType) => void
+    create: (payload: FoodCategoryType) => void
+    update: (foodId: string, payload: FoodCategoryType) => void
     changeStatus: (foodId: string, status: number) => void
     delete: (foodId: string) => void
 }
 
-const FoodStore = create<FoodStoreType>()(
+const FoodCategoryStore = create<FoodCategoryStoreType>()(
     (set, get) => ({
         loading: false,
         list: [],
@@ -30,7 +29,7 @@ const FoodStore = create<FoodStoreType>()(
             const res = await apis.getAll()
             set({ list: res.data })
         },
-        create: async (payload: FoodType) => {
+        create: async (payload: FoodCategoryType) => {
             set({ loading: true })
             try {
                 await apis.createFood(payload)
@@ -40,12 +39,14 @@ const FoodStore = create<FoodStoreType>()(
                 throw new Error(error)
             }
         },
-        update: async (foodId: string, payload: FoodType) => {
+        update: async (foodId: string, payload: FoodCategoryType) => {
             set({ loading: true })
             try {
-                await apis.updateFood(foodId, payload)
-                set({ loading: false, targetItem: undefined })
-                get().fetchList()
+                const res = await apis.updateFood(foodId, payload)
+                const updatedList: FoodCategoryType[] = JSON.parse(JSON.stringify(get().list))
+                const i = updatedList.findIndex(x => x.id === foodId)
+                updatedList[i] = res.data
+                set({ loading: false, targetItem: undefined, list: updatedList })
             } catch (error) {
                 set({ loading: false })
                 throw new Error(error)
@@ -58,7 +59,7 @@ const FoodStore = create<FoodStoreType>()(
             set({ loading: true })
             try {
                 await apis.ChangeStatus(foodId, status)
-                const updatedList: FoodType[] = JSON.parse(JSON.stringify(get().list))
+                const updatedList: FoodCategoryType[] = JSON.parse(JSON.stringify(get().list))
                 const i = updatedList.findIndex(x => x.id === foodId)
                 updatedList[i].status = status
                 set({ loading: false, targetItem: undefined, list: updatedList })
@@ -82,4 +83,4 @@ const FoodStore = create<FoodStoreType>()(
     }),
 )
 
-export default FoodStore
+export default FoodCategoryStore

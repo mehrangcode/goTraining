@@ -1,17 +1,19 @@
-import { useMemo, useRef, useState } from "react"
+import { ReactElement, useMemo, useRef, useState } from "react"
 
 type SelectProps = {
     options: { [key: string]: string }[]
-    value: string
+    value: string | string[]
     onChange: (value: string) => void
     disabled?: boolean
     valueKey?: string
     displayKey?: string
+    mode?: "single" | "multiple"
 }
 function Select({
     options,
     valueKey = "id",
     displayKey = 'label',
+    mode = "single",
     value,
     onChange
 }: SelectProps) {
@@ -19,16 +21,28 @@ function Select({
     const [searchValue, setSearchValue] = useState("")
     const inputRef = useRef(null)
     const _value = useMemo(() => {
-        let result = ""
-        if (options.find(x => x[valueKey] === value)) {
+        let result = value
+        if (value && mode === "single" && options.find(x => x[valueKey] === value)) {
             return options.find(x => x[valueKey] === value)[displayKey]
         }
+        if (value && mode === "multiple") {
+            const _values: ReactElement[] = [];
+            (value as string[]).forEach(v => {
+                const t = options.find(x => x[valueKey] === v)
+                if (t) {
+                    _values.push(<span className="multipleOption">{t[displayKey]}</span>)
+                } else {
+                    _values.push(<span className="multipleOption">{v}</span>)
+                }
+            })
+            return _values
+        }
         return result
-    }, [value])
+    }, [value, mode])
     return (
         <div className="select"
             tabIndex={0}
-            onClick={() => {setShowBox(true)}}
+            onClick={() => { setShowBox(true) }}
             onFocus={() => {
                 setShowBox(true)
                 if (inputRef.current) {
@@ -40,9 +54,14 @@ function Select({
             <span className="valueSpan" style={{
                 opacity: searchValue?.length > 0 ? .3 : 1,
                 width: searchValue?.length > 0 ? 0 : "max-content",
-                overflowX: searchValue?.length > 0 ? "hidden" : "visible",
-            }}>{_value}</span>
+                overflow: "hidden",
+                display: "flex",
+                gap: "0.25rem"
+            }}>{
+                    typeof _value == "undefined" ? null : _value
+                }</span>
             <input
+                style={{ width: ((searchValue?.length || 1) * 8) + "px" }}
                 ref={inputRef}
                 type="text" className="selectInput"
                 onFocus={(e) => e.target.select()}

@@ -87,7 +87,9 @@ func (h *foodsApi) Update(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
 	}
-	utils.WriteJson(w, http.StatusOK, models.FoodViewModel(foodDTO))
+	utils.WriteJson(w, http.StatusOK, map[string]string{
+		"msg": "food is uptaed",
+	})
 }
 
 func (h *foodsApi) ChangeStatus(w http.ResponseWriter, r *http.Request) {

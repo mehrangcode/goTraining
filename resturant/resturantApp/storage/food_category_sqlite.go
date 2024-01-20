@@ -19,7 +19,7 @@ func NewFoodCategorySqliteDB() *FoodCategorySqliteDB {
 }
 
 func (repo *FoodCategorySqliteDB) GetAll() ([]models.FoodCategoryViewModel, error) {
-	query := `SELECT * FROM food_categories`
+	query := `SELECT * FROM foodCategories`
 	var list []models.FoodCategoryViewModel
 	err := repo.DB.Select(&list, query)
 	if err != nil {
@@ -28,7 +28,7 @@ func (repo *FoodCategorySqliteDB) GetAll() ([]models.FoodCategoryViewModel, erro
 	return list, nil
 }
 func (repo *FoodCategorySqliteDB) GetById(id string) (models.FoodCategoryViewModel, error) {
-	query := `SELECT * FROM food_categories WHERE id=?`
+	query := `SELECT * FROM foodCategories WHERE id=?`
 	var item models.FoodCategoryViewModel
 	err := repo.DB.Get(&item, query, id)
 	if err != nil {
@@ -38,7 +38,7 @@ func (repo *FoodCategorySqliteDB) GetById(id string) (models.FoodCategoryViewMod
 }
 
 func (repo *FoodCategorySqliteDB) Create(payload models.FoodCategoryDTO) (string, error) {
-	query := `INSERT INTO food_categories (title,description,status,avatar) VALUES (?,?,?,?) RETURNING id`
+	query := `INSERT INTO foodCategories (title,description,status,avatar) VALUES (?,?,?,?) RETURNING id`
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {
 		return "", err
@@ -53,7 +53,7 @@ func (repo *FoodCategorySqliteDB) Create(payload models.FoodCategoryDTO) (string
 }
 
 func (repo *FoodCategorySqliteDB) Update(catId string, payload models.FoodCategoryDTO) error {
-	query := "UPDATE food_categories SET title=?,description=?,avatar=? WHERE id=? RETURNING id"
+	query := "UPDATE foodCategories SET title=?,description=?,avatar=? WHERE id=? RETURNING id"
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func (repo *FoodCategorySqliteDB) Update(catId string, payload models.FoodCatego
 	return nil
 }
 func (repo *FoodCategorySqliteDB) ChangeStatus(catId string, status int) error {
-	query := "UPDATE food_categories SET status=?  WHERE id=? RETURNING id"
+	query := "UPDATE foodCategories SET status=?  WHERE id=? RETURNING id"
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func (repo *FoodCategorySqliteDB) ChangeStatus(catId string, status int) error {
 }
 
 func (repo *FoodCategorySqliteDB) Delete(catId string) error {
-	query := `DELETE FROM food_categories WHERE id=?`
+	query := `DELETE FROM foodCategories WHERE id=?`
 
 	stmt, err := repo.DB.Prepare(query)
 	if err != nil {

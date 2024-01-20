@@ -56,7 +56,7 @@ func (h *food_categoriesApi) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if newItem.Title == "" {
-		utils.ResponseToError(w, errors.New("name is required"), http.StatusBadRequest)
+		utils.ResponseToError(w, errors.New("title is required"), http.StatusBadRequest)
 		return
 	}
 	catId, err := h.repo.Create(newItem)

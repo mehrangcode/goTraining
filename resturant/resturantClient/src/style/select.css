@@ -46,11 +46,8 @@
 }
 
 input.selectInput {
-    background: transparent;
-    border: none;
-    color: var(--fontColor);
-}
-
-input.selectInput {
-    outline: none;
+    background: transparent !important;
+    border: none !important;
+    color: var(--fontColor) !important;
+    outline: none !important;
 }

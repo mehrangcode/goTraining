@@ -12,7 +12,7 @@ function FoodsPage() {
     <div className="foodPage">
       <FoodForm />
       <div className="foodsListPreview">
-        {foodStore.list.map(food => {
+        {foodStore.list?.map(food => {
           return <FoodCard food={food} />
         })}
       </div>

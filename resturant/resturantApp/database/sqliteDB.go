@@ -9,8 +9,8 @@ import (
 )
 
 func sqliteDbConnect() {
-	db, err := sqlx.Open("sqlite3", ":memory:")
-	// db, err := sqlx.Open("sqlite3", "data.db")
+	// db, err := sqlx.Open("sqlite3", ":memory:")
+	db, err := sqlx.Open("sqlite3", "data.db")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -52,12 +52,22 @@ func MigrateDB() error {
 		panic(err)
 	}
 	query = `
-		CREATE TABLE IF NOT EXISTS food_categories(
+		CREATE TABLE IF NOT EXISTS foodCategories(
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			description,
 			status INTEGER DEFAULT 1,
 			avatar
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	query = `
+		CREATE TABLE IF NOT EXISTS food_categories(
+			food_id TEXT NOT NULL,
+			category_id TEXT NOT NULL
 		);
 		`
 	_, err = DB.Exec(query)
@@ -109,6 +119,16 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
+	query = ` INSERT INTO foodCategories (title,status) values(?,?)`
+	_, err = DB.Exec(query, "Fast Food", 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO foodCategories (title,status) values(?,?)`
+	_, err = DB.Exec(query, "Drinks", 1)
+	if err != nil {
+		panic(err)
+	}
 	query = ` INSERT INTO foods (name,status) values(?,?)`
 	_, err = DB.Exec(query, "Pizza", 1)
 	if err != nil {
@@ -121,6 +141,21 @@ func MigrateDB() error {
 	}
 	query = ` INSERT INTO foods (name,status) values(?,?)`
 	_, err = DB.Exec(query, "Spagety", 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO food_categories (food_id,category_id) values(?,?)`
+	_, err = DB.Exec(query, 1, 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO food_categories (food_id,category_id) values(?,?)`
+	_, err = DB.Exec(query, 2, 1)
+	if err != nil {
+		panic(err)
+	}
+	query = ` INSERT INTO food_categories (food_id,category_id) values(?,?)`
+	_, err = DB.Exec(query, 3, 1)
 	if err != nil {
 		panic(err)
 	}
