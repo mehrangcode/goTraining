@@ -60,5 +60,15 @@ func RegisterRoutes() http.Handler {
 			r.Delete("/", menu_handler.Delete)
 		})
 	})
+	tables_handler := handlers.NewTablesHandler()
+	r.Route("/api/tables", func(r chi.Router) {
+		r.Get("/", tables_handler.GetAll)
+		r.Post("/", tables_handler.Create)
+		r.Route("/{tableId}", func(r chi.Router) {
+			r.Put("/", tables_handler.Update)
+			r.Patch("/changeStatus/{status}", tables_handler.ChangeStatus)
+			r.Delete("/", tables_handler.Delete)
+		})
+	})
 	return r
 }
