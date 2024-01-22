@@ -3,7 +3,7 @@ package models
 type TableViewModel struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
-	Capacity uint   `json:"Capacity"`
+	Capacity uint   `json:"capacity"`
 	Photos   string `json:"photos"`
 	Status   uint   `json:"status"`
 }

@@ -9,8 +9,8 @@ import (
 )
 
 func sqliteDbConnect() {
-	// db, err := sqlx.Open("sqlite3", ":memory:")
-	db, err := sqlx.Open("sqlite3", "data.db")
+	db, err := sqlx.Open("sqlite3", ":memory:")
+	// db, err := sqlx.Open("sqlite3", "data.db")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -104,6 +104,19 @@ func MigrateDB() error {
 			food_id TEXT NOT NULL,
 			section_id TEXT NOT NULL,
 			price
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	query = `
+		CREATE TABLE IF NOT EXISTS tables(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			capacity INTEGER NOT NULL,
+			photos TEXT,
+			status INTEGER DEFAULT 1
 		);
 		`
 	_, err = DB.Exec(query)

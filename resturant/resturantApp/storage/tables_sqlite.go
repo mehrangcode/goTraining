@@ -63,7 +63,7 @@ func (repo *TableSqliteDB) Update(tableID string, payload models.TableDTO) error
 		return err
 	}
 	var tableId string
-	err = stmt.QueryRow(payload.Name, payload.Capacity, payload.Photos).Scan(&tableId)
+	err = stmt.QueryRow(payload.Name, payload.Capacity, payload.Photos, tableID).Scan(&tableId)
 	if err != nil {
 		return errors.New("table was not found")
 	}

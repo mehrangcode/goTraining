@@ -67,6 +67,7 @@ func RegisterRoutes() http.Handler {
 		r.Route("/{tableId}", func(r chi.Router) {
 			r.Put("/", tables_handler.Update)
 			r.Patch("/changeStatus/{status}", tables_handler.ChangeStatus)
+			r.Post("/reservation", tables_handler.Reservation)
 			r.Delete("/", tables_handler.Delete)
 		})
 	})

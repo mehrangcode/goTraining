@@ -22,6 +22,7 @@ type TableHandlers interface {
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
 	ChangeStatus(w http.ResponseWriter, r *http.Request)
+	Reservation(w http.ResponseWriter, r *http.Request)
 }
 
 func NewTablesHandler() TableHandlers {
@@ -49,8 +50,7 @@ func (h *tablesApi) GetById(w http.ResponseWriter, r *http.Request) {
 
 func (h *tablesApi) Create(w http.ResponseWriter, r *http.Request) {
 	var newTable models.TableDTO
-	var err error
-	err = utils.ReadJson(w, r, &newTable)
+	err := utils.ReadJson(w, r, &newTable)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
@@ -72,8 +72,7 @@ func (h *tablesApi) Create(w http.ResponseWriter, r *http.Request) {
 func (h *tablesApi) Update(w http.ResponseWriter, r *http.Request) {
 	tableId := chi.URLParam(r, "tableId")
 	var dto models.TableDTO
-	var err error
-	err = utils.ReadJson(w, r, &dto)
+	err := utils.ReadJson(w, r, &dto)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 	}
@@ -105,6 +104,27 @@ func (h *tablesApi) ChangeStatus(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJson(w, http.StatusOK, map[string]string{
 		"msg": "table status updated",
+	})
+}
+func (h *tablesApi) Reservation(w http.ResponseWriter, r *http.Request) {
+	tableId := chi.URLParam(r, "tableId")
+	var dto models.ReservationDTO
+	err := utils.ReadJson(w, r, &dto)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+	}
+	if tableId == "" || dto.UserID == "" || dto.TableID == "" || dto.Date == "" {
+		utils.ResponseToError(w, errors.New("table fields is required"), http.StatusBadRequest)
+		return
+	}
+	err = h.repo.Reservation(tableId, dto)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+		return
+	}
+
+	utils.WriteJson(w, http.StatusOK, map[string]string{
+		"msg": "table reservation was successful",
 	})
 }
 
