@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import MenuStore from "./store"
-import MenuForm from "@src/components/menus/MenuForm"
+import MenuForm from "./components/MenuForm"
 
 function MenusPage() {
   const menuStore = MenuStore()

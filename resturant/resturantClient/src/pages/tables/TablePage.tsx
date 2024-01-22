@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import TableStore from "./store"
-import TableForm from "./TableForm"
+import TableForm from "./components/TableForm"
 
 function TablesPage() {
   const tableStore = TableStore()

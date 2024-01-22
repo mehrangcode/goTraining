@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import UserStore from "./store"
-import UserForm from "@src/components/users/UserForm"
+import UserForm from "./components/UserForm"
 
 function Users() {
   const userStore = UserStore()
