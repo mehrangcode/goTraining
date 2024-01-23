@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"mehrangcode.ir/resturant/app/models"
@@ -68,24 +70,24 @@ func (h *usersApi) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *usersApi) Update(w http.ResponseWriter, r *http.Request) {
-	userId := chi.URLParam(r, "userId")
+	userId, _ := strconv.Atoi(chi.URLParam(r, "userId"))
 	var userDTO models.UserDTO
 	var err error
 	err = utils.ReadJson(w, r, &userDTO)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 	}
-	if userId == "" || userDTO.Name == "" || userDTO.Email == "" {
+	if userId == 0 || userDTO.Name == "" || userDTO.Email == "" {
 		utils.ResponseToError(w, errors.New("user fields is required"), http.StatusBadRequest)
 		return
 	}
-	err = h.repo.Update(userId, userDTO)
+	err = h.repo.Update(fmt.Sprint(userId), userDTO)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
 	}
 	utils.WriteJson(w, http.StatusOK, models.UserViewModel{
-		ID:    userId,
+		ID:    uint(userId),
 		Name:  userDTO.Name,
 		Email: userDTO.Email,
 	})

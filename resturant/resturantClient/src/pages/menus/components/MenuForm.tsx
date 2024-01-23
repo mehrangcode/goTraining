@@ -88,7 +88,7 @@ function MenuForm() {
             </div>
             {!menuStore.targetItem ? <div className="fomControll">
                 <label htmlFor="status">status</label>
-                <input type="status" id="status" value={values.status} onChange={(e) => {
+                <input type="text" id="status" value={values.status} onChange={(e) => {
                     e.preventDefault()
                     onChangeHandler("status", e.target.value)
                 }} />

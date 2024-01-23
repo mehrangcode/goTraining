@@ -14,9 +14,3 @@ type TableDTO struct {
 	Photos   string `json:"photos"`
 	Status   uint   `json:"status"`
 }
-
-type ReservationDTO struct {
-	TableID string `json:"table_id"`
-	UserID  string `json:"user_id"`
-	Date    string `json:"date"`
-}

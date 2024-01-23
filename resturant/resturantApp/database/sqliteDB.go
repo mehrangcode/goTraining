@@ -123,6 +123,19 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
+	query = `
+		CREATE TABLE IF NOT EXISTS reservations(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			user_id TEXT NOT NULL,
+			guests INTEGER NOT NULL,
+			date TEXT NOT NULL,
+			status INTEGER DEFAULT 1
+		);
+		`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 	query = ` INSERT INTO users (name,email,password) values(?,?,?)`
 	hash, err := utils.HashingPassword("1234")
 	if err != nil {
@@ -167,10 +180,10 @@ func MigrateDB() error {
 	if err != nil {
 		panic(err)
 	}
-	query = ` INSERT INTO food_categories (food_id,category_id) values(?,?)`
-	_, err = DB.Exec(query, 3, 1)
-	if err != nil {
-		panic(err)
-	}
+	// query = ` INSERT INTO food_categories (food_id,category_id) values(?,?)`
+	// _, err = DB.Exec(query, 3, 1)
+	// if err != nil {
+	// 	panic(err)
+	// }
 	return err
 }

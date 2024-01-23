@@ -99,8 +99,3 @@ func (repo *TableSqliteDB) Delete(tableID string) error {
 	}
 	return nil
 }
-
-func (repo *TableSqliteDB) Reservation(tableId string, payload models.ReservationDTO) error {
-
-	return nil
-}

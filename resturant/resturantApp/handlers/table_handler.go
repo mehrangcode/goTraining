@@ -22,7 +22,6 @@ type TableHandlers interface {
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
 	ChangeStatus(w http.ResponseWriter, r *http.Request)
-	Reservation(w http.ResponseWriter, r *http.Request)
 }
 
 func NewTablesHandler() TableHandlers {
@@ -104,27 +103,6 @@ func (h *tablesApi) ChangeStatus(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJson(w, http.StatusOK, map[string]string{
 		"msg": "table status updated",
-	})
-}
-func (h *tablesApi) Reservation(w http.ResponseWriter, r *http.Request) {
-	tableId := chi.URLParam(r, "tableId")
-	var dto models.ReservationDTO
-	err := utils.ReadJson(w, r, &dto)
-	if err != nil {
-		utils.ResponseToError(w, err, http.StatusBadRequest)
-	}
-	if tableId == "" || dto.UserID == "" || dto.TableID == "" || dto.Date == "" {
-		utils.ResponseToError(w, errors.New("table fields is required"), http.StatusBadRequest)
-		return
-	}
-	err = h.repo.Reservation(tableId, dto)
-	if err != nil {
-		utils.ResponseToError(w, err, http.StatusBadRequest)
-		return
-	}
-
-	utils.WriteJson(w, http.StatusOK, map[string]string{
-		"msg": "table reservation was successful",
 	})
 }
 

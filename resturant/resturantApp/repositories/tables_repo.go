@@ -8,6 +8,5 @@ type TableRepo interface {
 	Create(payload models.TableDTO) (string, error)
 	Update(id string, payload models.TableDTO) error
 	ChangeStatus(id string, status uint) error
-	Reservation(id string, payload models.ReservationDTO) error
 	Delete(id string) error
 }
