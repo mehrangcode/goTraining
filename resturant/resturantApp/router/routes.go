@@ -75,6 +75,7 @@ func RegisterRoutes() http.Handler {
 		r.Get("/", reservations_handler.GetAll)
 		r.Post("/", reservations_handler.Create)
 		r.Route("/{reservationId}", func(r chi.Router) {
+			r.Get("/", reservations_handler.GetById)
 			r.Put("/", reservations_handler.Update)
 			r.Patch("/changeStatus/{status}", reservations_handler.ChangeStatus)
 			r.Delete("/", reservations_handler.Delete)

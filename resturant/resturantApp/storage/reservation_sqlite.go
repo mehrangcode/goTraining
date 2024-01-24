@@ -3,7 +3,6 @@ package storage
 import (
 	"errors"
 
-	"github.com/jackskj/carta"
 	"github.com/jmoiron/sqlx"
 	"mehrangcode.ir/resturant/app/database"
 	"mehrangcode.ir/resturant/app/models"
@@ -23,18 +22,14 @@ func (repo *ReservationSqliteDB) GetAll() ([]models.ReservationViewModel, error)
 	query := `SELECT 
 	r.id as "id", 
 	r.guests as "guests", 
-	r.date as "date", 
-	user.id as "users_id", 
-	user.name as "users_name", 
-	user.email as "users_email"
+	r.date as "date",
+	user.id as "user.id", 
+	user.name as "user.name", 
+	user.email as "user.email"
 	FROM reservations r
 	JOIN users user ON r.user_id = user.id`
 	var list []models.ReservationViewModel
-	rows, err := repo.DB.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	err = carta.Map(rows, &list)
+	err := repo.DB.Select(&list, query)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +37,16 @@ func (repo *ReservationSqliteDB) GetAll() ([]models.ReservationViewModel, error)
 }
 
 func (repo *ReservationSqliteDB) GetById(reservationId string) (models.ReservationViewModel, error) {
-	query := `SELECT * FROM reservations WHERE id=?`
+	query := `SELECT 
+	r.id as "id", 
+	r.guests as "guests", 
+	r.date as "date",
+	user.id as "user.id", 
+	user.name as "user.name", 
+	user.email as "user.email"
+	FROM reservations r
+	JOIN users user ON r.user_id = user.id
+	WHERE r.id=?`
 	var item models.ReservationViewModel
 	err := repo.DB.Get(&item, query, reservationId)
 	if err != nil {
