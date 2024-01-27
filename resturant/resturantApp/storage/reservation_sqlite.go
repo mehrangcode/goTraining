@@ -54,6 +54,24 @@ func (repo *ReservationSqliteDB) GetById(reservationId string) (models.Reservati
 	}
 	return item, nil
 }
+func (repo *ReservationSqliteDB) GetByUserId(userId string) ([]models.ReservationViewModel, error) {
+	query := `SELECT 
+	r.id as "id", 
+	r.guests as "guests", 
+	r.date as "date",
+	user.id as "user.id", 
+	user.name as "user.name", 
+	user.email as "user.email"
+	FROM reservations r
+	JOIN users user ON r.user_id = user.id
+	WHERE r.user_id=?`
+	var list []models.ReservationViewModel
+	err := repo.DB.Select(&list, query, userId)
+	if err != nil {
+		return list, err
+	}
+	return list, nil
+}
 
 func (repo *ReservationSqliteDB) Create(payload models.ReservationDTO) (string, error) {
 	query := `INSERT INTO reservations (user_id,guests,date,status) VALUES (:user_id,:guests,:date,:status) RETURNING id`

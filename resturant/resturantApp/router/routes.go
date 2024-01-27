@@ -72,6 +72,7 @@ func RegisterRoutes() http.Handler {
 	})
 	reservations_handler := handlers.NewReservationsHandler()
 	r.Route("/api/reservations", func(r chi.Router) {
+		r.Get("/forUser/{userId}", reservations_handler.GetByUserId)
 		r.Get("/", reservations_handler.GetAll)
 		r.Post("/", reservations_handler.Create)
 		r.Route("/{reservationId}", func(r chi.Router) {

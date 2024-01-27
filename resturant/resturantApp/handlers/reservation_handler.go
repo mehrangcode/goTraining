@@ -18,6 +18,7 @@ type reservationsApi struct {
 type ReservationHandlers interface {
 	GetAll(w http.ResponseWriter, r *http.Request)
 	GetById(w http.ResponseWriter, r *http.Request)
+	GetByUserId(w http.ResponseWriter, r *http.Request)
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
@@ -30,6 +31,15 @@ func NewReservationsHandler() ReservationHandlers {
 
 func (h *reservationsApi) GetAll(w http.ResponseWriter, r *http.Request) {
 	Reservations, err := h.repo.GetAll()
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusInternalServerError)
+		return
+	}
+	utils.WriteJson(w, 200, Reservations)
+}
+func (h *reservationsApi) GetByUserId(w http.ResponseWriter, r *http.Request) {
+	userId := chi.URLParam(r, "userId")
+	Reservations, err := h.repo.GetByUserId(userId)
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
