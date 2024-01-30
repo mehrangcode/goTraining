@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import MenuStore from "./store"
 import MenuForm from "./components/MenuForm"
-
+import './style.css'
 function MenusPage() {
   const menuStore = MenuStore()
   useEffect(() => {
@@ -14,7 +14,7 @@ function MenusPage() {
         <thead>
           <tr>
             <th>Name</th>
-            <th>email</th>
+            <th>description</th>
             <th>status</th>
             <th>action</th>
           </tr>

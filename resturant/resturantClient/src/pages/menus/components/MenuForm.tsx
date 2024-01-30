@@ -71,7 +71,9 @@ function MenuForm() {
         })
     }
     return (
-        <form className="horizontal" onSubmit={onSubmitHandler}>
+        <form onSubmit={onSubmitHandler}>
+        <button type="submit">{menuStore.targetItem ? "Edit" : "Save"}</button>
+        {menuStore.targetItem ? <button type="button" onClick={() => menuStore.selectMenu(undefined)}>Close</button> : null}
             <div className="fomControll">
                 <label htmlFor="title">title</label>
                 <input type="text" id="title" value={values.title} onChange={(e) => {
@@ -93,8 +95,9 @@ function MenuForm() {
                     onChangeHandler("status", e.target.value)
                 }} />
             </div> : null}
-            <button type="submit">{menuStore.targetItem ? "Edit" : "Save"}</button>
-            {menuStore.targetItem ? <button type="button" onClick={() => menuStore.selectMenu(undefined)}>Reset</button> : null}
+            <div className="sectionsWrapper">
+                
+            </div>
         </form>
     )
 }

@@ -1,0 +1,30 @@
+.menuPage {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.menuSection {
+    width: calc(50% - .5rem);
+    border: 1px solid var(--borderColor);
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.sectionsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.foodsInputWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.foodInputs {
+    display: flex;
+    gap: .5rem;
+    width: calc(50% - .5rem);
+}

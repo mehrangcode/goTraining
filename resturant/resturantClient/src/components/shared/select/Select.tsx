@@ -1,7 +1,7 @@
 import { ReactElement, useMemo, useRef, useState } from "react"
 
 type SelectProps = {
-    options: { [key: string]: string }[]
+    options: any[]
     value: string | string[]
     onChange: (value: string) => void
     disabled?: boolean
