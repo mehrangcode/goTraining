@@ -14,7 +14,7 @@ import (
 )
 
 type usersApi struct {
-	repo repositories.UserRepoInterface
+	repo repositories.UserRepo
 }
 
 type UserHandlers interface {
@@ -23,6 +23,7 @@ type UserHandlers interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
+	Login(w http.ResponseWriter, r *http.Request)
 }
 
 func NewUsersHandler() UserHandlers {
@@ -35,10 +36,16 @@ func (h *usersApi) GetAll(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
-	for i := range users {
-		users[i].FullName = users[i].FirstName + " " + users[i].LastName
+	var updatedUsers []models.UserVieModel
+	for _, user := range users {
+		uu := models.UserVieModel{
+			ID:       user.ID,
+			FullName: user.FirstName + " " + user.LastName,
+			Phone:    user.Phone,
+		}
+		updatedUsers = append(updatedUsers, uu)
 	}
-	utils.WriteJson(w, http.StatusOK, users)
+	utils.WriteJson(w, http.StatusOK, updatedUsers)
 }
 
 func (h *usersApi) GetById(w http.ResponseWriter, r *http.Request) {
@@ -52,8 +59,12 @@ func (h *usersApi) GetById(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
-	user.FullName = user.FirstName + " " + user.LastName
-	utils.WriteJson(w, http.StatusOK, user)
+	updatedUser := models.UserVieModel{
+		ID:       user.ID,
+		FullName: user.FirstName + " " + user.LastName,
+		Phone:    user.Phone,
+	}
+	utils.WriteJson(w, http.StatusOK, updatedUser)
 }
 
 func (h *usersApi) Create(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +87,9 @@ func (h *usersApi) Create(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
-	utils.WriteJson(w, http.StatusCreated, user)
+	utils.WriteJson(w, http.StatusCreated, map[string]uint{
+		"ID": user.ID,
+	})
 }
 
 func (h *usersApi) Update(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +112,9 @@ func (h *usersApi) Update(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseToError(w, err, http.StatusInternalServerError)
 		return
 	}
-	utils.WriteJson(w, http.StatusOK, user)
+	utils.WriteJson(w, http.StatusOK, map[string]uint{
+		"ID": user.ID,
+	})
 }
 
 func (h *usersApi) Delete(w http.ResponseWriter, r *http.Request) {
@@ -123,4 +138,34 @@ func ValidateBody(data models.User) bool {
 
 	return true
 
+}
+
+func (h *usersApi) Login(w http.ResponseWriter, r *http.Request) {
+	var creds struct {
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+		return
+	}
+
+	user, err := h.repo.GetByPhone(creds.Phone)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)); err != nil {
+		utils.ResponseToError(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	token, err := utils.GenerateJWT(user.ID)
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	utils.WriteJson(w, http.StatusOK, map[string]string{"token": token})
 }

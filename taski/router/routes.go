@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"mehrang.ir/taski/handlers"
+	"mehrang.ir/taski/utils"
 )
 
 func RegisterRoutes() http.Handler {
@@ -25,12 +26,16 @@ func RegisterRoutes() http.Handler {
 	userHandlers := handlers.NewUsersHandler()
 
 	r.Route("/api/users", func(r chi.Router) {
-		r.Get("/", userHandlers.GetAll)
-		r.Post("/", userHandlers.Create)
-		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", userHandlers.GetById)
-			r.Put("/", userHandlers.Update)
-			r.Delete("/", userHandlers.Delete)
+		r.Post("/login", userHandlers.Login)
+		r.Group(func(r chi.Router) {
+			r.Use(utils.Authenticate)
+			r.Get("/", userHandlers.GetAll)
+			r.Post("/", userHandlers.Create)
+			r.Route("/{id}", func(r chi.Router) {
+				r.Get("/", userHandlers.GetById)
+				r.Put("/", userHandlers.Update)
+				r.Delete("/", userHandlers.Delete)
+			})
 		})
 	})
 	return r

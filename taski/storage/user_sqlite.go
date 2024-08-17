@@ -6,13 +6,13 @@ import (
 	"mehrang.ir/taski/repositories"
 )
 
-type userRepo struct{}
+type userSqliteDB struct{}
 
-func NewUserSqliteDB() repositories.UserRepoInterface {
-	return &userRepo{}
+func NewUserSqliteDB() repositories.UserRepo {
+	return &userSqliteDB{}
 }
 
-func (r *userRepo) GetAll() ([]models.User, error) {
+func (r *userSqliteDB) GetAll() ([]models.User, error) {
 	var users []models.User
 	if err := database.DB.Find(&users).Error; err != nil {
 		return nil, err
@@ -20,7 +20,7 @@ func (r *userRepo) GetAll() ([]models.User, error) {
 	return users, nil
 }
 
-func (r *userRepo) GetById(id int) (models.User, error) {
+func (r *userSqliteDB) GetById(id int) (models.User, error) {
 	var user models.User
 	if err := database.DB.First(&user, id).Error; err != nil {
 		return user, err
@@ -28,14 +28,21 @@ func (r *userRepo) GetById(id int) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepo) Create(user *models.User) error {
+func (r *userSqliteDB) Create(user *models.User) error {
 	return database.DB.Create(user).Error
 }
 
-func (r *userRepo) Update(user *models.User) error {
+func (r *userSqliteDB) Update(user *models.User) error {
 	return database.DB.Save(user).Error
 }
 
-func (r *userRepo) Delete(id int) error {
+func (r *userSqliteDB) Delete(id int) error {
 	return database.DB.Delete(&models.User{}, id).Error
+}
+func (r *userSqliteDB) GetByPhone(phone string) (models.User, error) {
+	var user models.User
+	if err := database.DB.Where("phone = ?", phone).First(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
 }

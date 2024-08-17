@@ -4,10 +4,11 @@ import (
 	"mehrang.ir/taski/models"
 )
 
-type UserRepoInterface interface {
+type UserRepo interface {
 	GetAll() ([]models.User, error)
 	GetById(id int) (models.User, error)
 	Create(user *models.User) error
 	Update(user *models.User) error
 	Delete(id int) error
+	GetByPhone(phone string) (models.User, error)
 }
