@@ -7,9 +7,9 @@ import (
 
 type UserVieModel struct {
 	ID       uint
-	Phone    string
-	FullName string
-	Roles    []Role `json:"rules"`
+	Phone    string `json:"phone"`
+	FullName string `json:"fullName"`
+	Roles    []Role `json:"rules,omitempty"`
 }
 type User struct {
 	gorm.Model

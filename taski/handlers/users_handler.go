@@ -43,7 +43,6 @@ func (h *usersApi) GetAll(w http.ResponseWriter, r *http.Request) {
 			ID:       user.ID,
 			FullName: user.FirstName + " " + user.LastName,
 			Phone:    user.Phone,
-			Roles:    user.Roles,
 		}
 		updatedUsers = append(updatedUsers, uu)
 	}

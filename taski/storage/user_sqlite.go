@@ -57,8 +57,10 @@ func (r *userSqliteDB) AddRolesToUser(userID uint, roleIDs []uint) (models.User,
 	if err := database.DB.Where("id IN ?", roleIDs).Find(&roles).Error; err != nil {
 		return user, err
 	}
-
-	if err := database.DB.Model(&user).Association("Roles.Permissions").Append(&roles); err != nil {
+	if err := database.DB.Model(&user).Association("Roles").Append(&roles); err != nil {
+		return user, err
+	}
+	if err := database.DB.Preload("Roles.Permissions").First(&user, userID).Error; err != nil {
 		return user, err
 	}
 
