@@ -14,7 +14,7 @@ func NewUserSqliteDB() repositories.UserRepo {
 
 func (r *userSqliteDB) GetAll() ([]models.User, error) {
 	var users []models.User
-	if err := database.DB.Find(&users).Error; err != nil {
+	if err := database.DB.Preload("Roles.Permissions").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
@@ -22,7 +22,7 @@ func (r *userSqliteDB) GetAll() ([]models.User, error) {
 
 func (r *userSqliteDB) GetById(id int) (models.User, error) {
 	var user models.User
-	if err := database.DB.First(&user, id).Error; err != nil {
+	if err := database.DB.Preload("Roles.Permissions").First(&user, id).Error; err != nil {
 		return user, err
 	}
 	return user, nil
@@ -44,5 +44,23 @@ func (r *userSqliteDB) GetByPhone(phone string) (models.User, error) {
 	if err := database.DB.Where("phone = ?", phone).First(&user).Error; err != nil {
 		return user, err
 	}
+	return user, nil
+}
+
+func (r *userSqliteDB) AddRolesToUser(userID uint, roleIDs []uint) (models.User, error) {
+	var user models.User
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		return user, err
+	}
+
+	var roles []models.Role
+	if err := database.DB.Where("id IN ?", roleIDs).Find(&roles).Error; err != nil {
+		return user, err
+	}
+
+	if err := database.DB.Model(&user).Association("Roles.Permissions").Append(&roles); err != nil {
+		return user, err
+	}
+
 	return user, nil
 }

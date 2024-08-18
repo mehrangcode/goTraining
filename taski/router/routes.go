@@ -7,7 +7,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"mehrang.ir/taski/handlers"
-	"mehrang.ir/taski/utils"
 )
 
 func RegisterRoutes() http.Handler {
@@ -23,18 +22,47 @@ func RegisterRoutes() http.Handler {
 	}))
 	r.Use(middleware.Logger)
 
-	userHandlers := handlers.NewUsersHandler()
-
 	r.Route("/api/users", func(r chi.Router) {
-		r.Post("/login", userHandlers.Login)
+		userHandler := handlers.NewUsersHandler()
+		r.Post("/login", userHandler.Login)
 		r.Group(func(r chi.Router) {
-			r.Use(utils.Authenticate)
-			r.Get("/", userHandlers.GetAll)
-			r.Post("/", userHandlers.Create)
-			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/", userHandlers.GetById)
-				r.Put("/", userHandlers.Update)
-				r.Delete("/", userHandlers.Delete)
+			// r.Use(utils.Authenticate)
+			r.Get("/", userHandler.GetAll)
+			r.Post("/", userHandler.Create)
+			r.Route("/{userID}", func(r chi.Router) {
+				r.Get("/", userHandler.GetById)
+				r.Put("/", userHandler.Update)
+				r.Delete("/", userHandler.Delete)
+				r.Put("/roles", userHandler.AddRolesToUser)
+			})
+		})
+	})
+
+	r.Route("/api/roles", func(r chi.Router) {
+		roleHandler := handlers.NewRoleHandler()
+		r.Group(func(r chi.Router) {
+			// r.Use(utils.Authenticate)
+			r.Post("/", roleHandler.Create)
+			r.Get("/", roleHandler.GetAll)
+			r.Route("/{roleID}", func(r chi.Router) {
+				r.Get("/", roleHandler.GetByID)
+				r.Put("/", roleHandler.Update)
+				r.Delete("/", roleHandler.Delete)
+				r.Put("/permissions", roleHandler.AddPermissionsToRole)
+			})
+		})
+	})
+
+	r.Route("/api/permissions", func(r chi.Router) {
+		permissionHandler := handlers.NewPermissionHandler()
+		r.Group(func(r chi.Router) {
+			// r.Use(utils.Authenticate)
+			r.Post("/", permissionHandler.Create)
+			r.Get("/", permissionHandler.GetAll)
+			r.Route("/{permissionID}", func(r chi.Router) {
+				r.Get("/", permissionHandler.GetByID)
+				r.Put("/", permissionHandler.Update)
+				r.Delete("/", permissionHandler.Delete)
 			})
 		})
 	})

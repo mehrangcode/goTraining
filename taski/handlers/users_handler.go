@@ -24,6 +24,7 @@ type UserHandlers interface {
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
 	Login(w http.ResponseWriter, r *http.Request)
+	AddRolesToUser(w http.ResponseWriter, r *http.Request)
 }
 
 func NewUsersHandler() UserHandlers {
@@ -42,6 +43,7 @@ func (h *usersApi) GetAll(w http.ResponseWriter, r *http.Request) {
 			ID:       user.ID,
 			FullName: user.FirstName + " " + user.LastName,
 			Phone:    user.Phone,
+			Roles:    user.Roles,
 		}
 		updatedUsers = append(updatedUsers, uu)
 	}
@@ -49,7 +51,7 @@ func (h *usersApi) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *usersApi) GetById(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	id, err := strconv.Atoi(chi.URLParam(r, "userID"))
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
@@ -63,6 +65,7 @@ func (h *usersApi) GetById(w http.ResponseWriter, r *http.Request) {
 		ID:       user.ID,
 		FullName: user.FirstName + " " + user.LastName,
 		Phone:    user.Phone,
+		Roles:    user.Roles,
 	}
 	utils.WriteJson(w, http.StatusOK, updatedUser)
 }
@@ -88,12 +91,12 @@ func (h *usersApi) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.WriteJson(w, http.StatusCreated, map[string]uint{
-		"ID": user.ID,
+		"userID": user.ID,
 	})
 }
 
 func (h *usersApi) Update(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	id, err := strconv.Atoi(chi.URLParam(r, "userID"))
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
@@ -113,12 +116,12 @@ func (h *usersApi) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.WriteJson(w, http.StatusOK, map[string]uint{
-		"ID": user.ID,
+		"userID": user.ID,
 	})
 }
 
 func (h *usersApi) Delete(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	id, err := strconv.Atoi(chi.URLParam(r, "userID"))
 	if err != nil {
 		utils.ResponseToError(w, err, http.StatusBadRequest)
 		return
@@ -169,3 +172,43 @@ func (h *usersApi) Login(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJson(w, http.StatusOK, map[string]string{"token": token})
 }
+
+func (h *usersApi) AddRolesToUser(w http.ResponseWriter, r *http.Request) {
+	userID, err := strconv.Atoi(chi.URLParam(r, "userID"))
+	if err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+		return
+	}
+
+	var roleIDs []uint
+	if err := json.NewDecoder(r.Body).Decode(&roleIDs); err != nil {
+		utils.ResponseToError(w, err, http.StatusBadRequest)
+		return
+	}
+
+	var user models.User
+	if user, err = h.repo.AddRolesToUser(uint(userID), roleIDs); err != nil {
+		utils.ResponseToError(w, err, http.StatusNotFound)
+		return
+	}
+
+	utils.WriteJson(w, http.StatusOK, user)
+}
+
+// filling user view model object
+// func fillUserViewModel(user *models.User, userViewModel *models.UserVieModel) {
+// 	userVal := reflect.ValueOf(user).Elem()
+// 	userViewModelVal := reflect.ValueOf(userViewModel).Elem()
+
+// 	for i := 0; i < userViewModelVal.NumField(); i++ {
+// 		field := userViewModelVal.Type().Field(i)
+// 		userField := userVal.FieldByName(field.Name)
+// 		if userField.IsValid() {
+// 			userViewModelVal.Field(i).Set(userField)
+// 		}
+// 	}
+
+// 	// Special handling for FullName
+// 	fullName := user.FirstName + " " + user.LastName
+// 	userViewModelVal.FieldByName("FullName").SetString(fullName)
+// }

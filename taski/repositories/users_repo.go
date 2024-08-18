@@ -11,4 +11,5 @@ type UserRepo interface {
 	Update(user *models.User) error
 	Delete(id int) error
 	GetByPhone(phone string) (models.User, error)
+	AddRolesToUser(userID uint, roleIds []uint) (models.User, error)
 }

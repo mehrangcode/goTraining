@@ -9,6 +9,7 @@ type UserVieModel struct {
 	ID       uint
 	Phone    string
 	FullName string
+	Roles    []Role `json:"rules"`
 }
 type User struct {
 	gorm.Model
@@ -17,4 +18,5 @@ type User struct {
 	Phone     string `json:"phone" gorm:"unique"`
 	Password  string `json:"password"`
 	FullName  string `json:"fullName" gorm:"-"`
+	Roles     []Role `gorm:"many2many:user_roles;"`
 }
