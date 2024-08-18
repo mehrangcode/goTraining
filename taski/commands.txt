@@ -1,0 +1,7 @@
+courses
+create a crud app in go for courses wich had title teacher lectures level tags categories fildes. 
+the lectures filed is an array of this fildes: title lead and sections wich had title content video fildes.
+ video filde is a link of a video file stored in a static folder named media 
+and the other fileds are text also the categories filde is an array of category ids and it could be null
+lectures is could be null too at first and user can add more lecture to course.
+i use chi as router and gorm for orm my application stracture is based on repository pattern wich has handler folder repository folder storage folder wich have all methode related to database and modles folder and the module name is mehrang.ir/taski
