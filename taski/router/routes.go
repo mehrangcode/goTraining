@@ -66,5 +66,31 @@ func RegisterRoutes() http.Handler {
 			})
 		})
 	})
+	r.Route("/api/categories", func(r chi.Router) {
+		categoryHandler := handlers.NewCategoryHandler()
+		r.Group(func(r chi.Router) {
+			// r.Use(utils.Authenticate)
+			r.Post("/", categoryHandler.Create)
+			r.Get("/", categoryHandler.GetAll)
+			r.Route("/{categoryID}", func(r chi.Router) {
+				r.Get("/", categoryHandler.GetByID)
+				r.Put("/", categoryHandler.Update)
+				r.Delete("/", categoryHandler.Delete)
+			})
+		})
+	})
+	r.Route("/api/courses", func(r chi.Router) {
+		courseHandler := handlers.NewCourseHandler()
+		r.Group(func(r chi.Router) {
+			// r.Use(utils.Authenticate)
+			r.Post("/", courseHandler.Create)
+			r.Get("/", courseHandler.GetAll)
+			r.Route("/{courseID}", func(r chi.Router) {
+				r.Get("/", courseHandler.GetByID)
+				r.Put("/", courseHandler.Update)
+				r.Delete("/", courseHandler.Delete)
+			})
+		})
+	})
 	return r
 }
